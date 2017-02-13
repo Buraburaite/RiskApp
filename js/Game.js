@@ -1,7 +1,10 @@
 function Game(name) {
 
+  let player = [];
+  let world = World();
+
   return {
-    world: World(),
-    players: []
+    world: world,
+    players: player
   };
 }

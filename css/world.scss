@@ -3,7 +3,13 @@
   height: 30px;
 }
 .canvas-container {
-  border: 1px solid black;
   width: 90%;
   height: 600px;
+  .row {
+    .col {
+      #canvas {
+          border: 1px solid black;
+      }
+    }
+  }
 }
