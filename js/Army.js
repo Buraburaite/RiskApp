@@ -1,4 +1,6 @@
-function Army(startX, startY) {
+function Army(ee, startX, startY) {
+
+  ee.on('pizza', () => { moveTo(100,100) });
 
   const img = new Image();
   img.src = "../IgnoreThis/Assets/Images/Archen.png";
@@ -14,6 +16,10 @@ function Army(startX, startY) {
     position = [x,y];
     img.style.left = x + 'px';
     img.style.bottom = y + 'px';
+
+  }
+
+  function addListeners() {
 
   }
 

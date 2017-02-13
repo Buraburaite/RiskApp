@@ -6,9 +6,9 @@ function Game(mapImgPath) {
 
   let turn = 0;
 
-  let EventEmitter = new EventEmitter();
+  let ee = $({});
 
-  function addArmy(army, x, y) {
+  function _addArmy(army, x, y) {
     map.append(army.img);
     army.moveTo(x,y);
   }
@@ -20,9 +20,12 @@ function Game(mapImgPath) {
   function _newTurn() {
     turn++;
 
-    let archen = Army(0,0);
-    addArmy(archen);
+    let archen = Army(ee, 0,0);
+    _addArmy(archen);
     let input = prompt('Give instructions: ');
+    if (input === 'ee') {
+      ee.trigger('pizza');
+    }
 
     input = input.split(',');
     archen.moveTo(input[0], input[1]);
@@ -31,7 +34,6 @@ function Game(mapImgPath) {
   return {
     world: world,
     players: player,
-    addArmy : addArmy,
     start : start
   };
 }
