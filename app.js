@@ -1,9 +1,10 @@
 //Create Game object
 let game  = Game('../IgnoreThis/Assets/Images/fry.jpg');
-let world = game.world;
 
-
-let testBtn = $('#testBtn');
+let testBtn = $('#test-btn');
 testBtn.click(() => {
-  game.addArmy(493, 315);
 });
+
+
+
+game.start();
