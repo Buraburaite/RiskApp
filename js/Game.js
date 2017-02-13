@@ -1,10 +1,17 @@
-function Game(name) {
+function Game(mapImgPath) {
 
-  let player = [];
-  let world = World();
+  const player = [];
+  const world = World(mapImgPath);
+  const map = world.map;
+
+
+  function addArmy(x, y) {
+    let army = Army();
+  }
 
   return {
     world: world,
-    players: player
+    players: player,
+    addArmy : addArmy
   };
 }
