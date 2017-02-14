@@ -52,7 +52,7 @@ function Army(emitter, map, player, startWaypoint) {
     'Apocalymon',
     'Apollomon',
     'Aquilamon',
-    'Arachimon',
+    'Arachnimon',
     'Arbok',
     'Arcanine',
     'Arceus',
@@ -68,31 +68,38 @@ function Army(emitter, map, player, startWaypoint) {
   _img.width = 100;
   _img.height = 60;
   _img.className = 'army';
-  _moveTo(startWaypoint);
+  moveTo(startWaypoint);
   map.append(_img);
 
 
-  function _moveTo(newWaypoint) {
+  function moveTo(newWaypoint) {
     _waypoint = newWaypoint;
     _img.style.left = _waypoint.x() + 'px';
     _img.style.bottom = _waypoint.y() + 'px';
 
   }
 
-  function onMoveEvent(orders) {
+  function onMoveEvent(e, orders) {
     if (orders[commander.name][_waypoint] && _actionsLeft > 0) {
       _actionsLeft--;
-      console.log('Found me! ' + commander.name + '\'s army at ' + _waypoint.name);
     }
   }
 
-  function onEndTurnEvent() { _actionsLeft = 2; }
+  function onEndTurnEvent(e) { _actionsLeft = 2; }
+
+  function onQueryArmies(e, query) {
+    if (query.player === commander && query.waypoint === _waypoint) {
+      query.armies.push();
+    }
+  }
 
   //Add events
-  _god.on('moveEvent',    (orders) => { onMoveEvent   (orders); });
-  _god.on('endTurnEvent', ()       => { onEndTurnEvent();       });
+  _god.on('moveEvent',    (e, orders) => { onMoveEvent   (orders); });
+  _god.on('endTurnEvent', (e)         => { onEndTurnEvent();       });
+  _god.on('queryArmies',  (e, query)  => { onQueryArmies (e, query);  });
 
   return {
-    commander : commander
+    commander : commander,
+    moveTo : moveTo
   };
 }

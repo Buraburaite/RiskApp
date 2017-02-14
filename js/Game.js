@@ -41,8 +41,6 @@ function Game(mapImgPath) {
     _god.trigger('startTurnEvent');
     let orders = {};
 
-
-
     _movePhase(1);
   }
 
@@ -72,13 +70,26 @@ function Game(mapImgPath) {
 
   function _addMon(waypoint) { Army(_god, _map, _players[0], waypoint); }
 
+  function getArmies(player, waypoint) {
+    let armies = [];
+    console.log(armies);
+    _god.trigger('queryArmies', {
+      'armies': armies,
+      'player': player,
+      'waypoint': waypoint
+    });
+
+    console.log(armies);
+    return armies;
+  }
+
   function _logPhases() {
-    _god.on('startEvent',     () => { console.log('The Game of Thrones has begun'); });
-    _god.on('startTurnEvent', () => { console.log('Turn ' + _turn + ' has begun'); });
-    _god.on('moveEvent',      () => { console.log('Armies are on the move...'); });
-    _god.on('combattEvent',   () => { console.log('Tension is in the air...'); });
-    _god.on('endTurnEvent',   () => { console.log('Turn ' + _turn + ' has ended'); });
-    _god.on('endEvent',       () => { console.log('The Game of Thrones has ended'); });
+    _god.on('startEvent',     (e) => { console.log('The Game of Thrones has begun'); });
+    _god.on('startTurnEvent', (e) => { console.log('Turn ' + _turn + ' has begun'); });
+    _god.on('moveEvent',      (e) => { console.log('Armies are on the move...'); });
+    _god.on('combattEvent',   (e) => { console.log('Tension is in the air...'); });
+    _god.on('endTurnEvent',   (e) => { console.log('Turn ' + _turn + ' has ended'); });
+    _god.on('endEvent',       (e) => { console.log('The Game of Thrones has ended'); });
   }
 
   //Gather Player data, and create Player objects
@@ -90,13 +101,11 @@ function Game(mapImgPath) {
     for (let i = 1; i < +input + 1; i++) {
 
       name = prompt('Name of Player ' + i + '?');
-
       while (names.includes(name)) {
         name = prompt('Name already taken, please enter a new name...');
       }
 
       house = prompt('What is the name of your house?');
-
       while (houses.includes(houses)) {
         house = prompt('Name already taken, please enter a new name...');
       }
@@ -108,7 +117,16 @@ function Game(mapImgPath) {
     }
   }
 
+  function moveMon(originNum, targetNum) {
+    player = _players[0];
+    origin = _waypoints[originNum];
+    let armies = getArmies(player, origin);
+    armies.forEach((mon) => { mon.moveTo(_waypoints[targetNum]); });
+    console.log(armies);
+  }
+
   return {
+    moveMon: moveMon,
     start : start
   };
 }
