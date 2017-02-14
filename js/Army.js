@@ -1,42 +1,41 @@
 function Army(emitter, player, startWaypoint) {
 
-  const god       = emitter;
   const commander = player;
-  const img       = new Image();
-  img.src = "../IgnoreThis/Assets/Images/Archen.png";
-  img.width = 100;
-  img.height = 60;
-  img.className = 'army';
-  img.style.left = startX + 'px';
-  img.style.bottom = startY + 'px';
 
-  let waypoint = startWaypoint;
-  let actionsLeft = 2;
+  const _god       = emitter;
+  const _img       = new Image();
+  let _waypoint    = null;
+  let _actionsLeft = 2;
 
-  function moveTo(newWaypoint) {
-    waypoint = newWaypoint;
-    img.style.left = waypoint.x() + 'px';
-    img.style.bottom = waypoint.y() + 'px';
+
+  _img.src = "../IgnoreThis/Assets/Images/Archen.png";
+  _img.width = 100;
+  _img.height = 60;
+  _img.className = 'army';
+  _moveTo(startWaypoint);
+
+
+  function _moveTo(newWaypoint) {
+    _waypoint = newWaypoint;
+    _img.style.left = _waypoint.x() + 'px';
+    _img.style.bottom = _waypoint.y() + 'px';
 
   }
 
   function onMoveEvent(orders) {
-    if (orders[commander.name][waypoint] && actionsLeft > 0) {
-      actionsLeft--;
-      console.log('Found me! ' + commander.name + '\'s army at ' + waypoint.name);
+    if (orders[commander.name][_waypoint] && _actionsLeft > 0) {
+      _actionsLeft--;
+      console.log('Found me! ' + commander.name + '\'s army at ' + _waypoint.name);
     }
   }
 
-  function onEndTurnEvent() { actionsLeft = 2; }
+  function onEndTurnEvent() { _actionsLeft = 2; }
 
   //Add events
-  god.on('moveEvent',    (orders) => { onMoveEvent   (orders); });
-  god.on('endTurnEvent', ()       => { onEndTurnEvent();       });
+  _god.on('moveEvent',    (orders) => { onMoveEvent   (orders); });
+  _god.on('endTurnEvent', ()       => { onEndTurnEvent();       });
 
   return {
-    img : img,
-    position : position,
-    moveTo : moveTo,
-    actionsLeft : actionsLeft
+    commander : commander
   };
 }

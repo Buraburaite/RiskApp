@@ -3,6 +3,7 @@ function Game(mapImgPath) {
   const player = [];
   const world = World(mapImgPath);
   const map = world.map;
+  const waypoints = world.waypoints;
   const players = [];
 
   const god = $({});
@@ -21,27 +22,31 @@ function Game(mapImgPath) {
   ====*/
 
   function start() {
+    _logPhases();
+
     god.trigger('startEvent'); //doesn't currently do anything
 
     turn = 0;
     // promptForPlayers();
+    players.push(Player('Javi', 1, 'Targaeryn'));
 
-    _newTurn();
+    _startTurn();
   }
 
-  function _newTurn() {
-    god.trigger('newTurnEvent');
+  function _startTurn() {
     turn++;
+    god.trigger('startTurnEvent');
 
-    _addArchen(player[0], 0, 0);
-    _addArchen(player[0], 50, 50);
-    let input = prompt('Give instructions: ');
+    for (let i = 0; i < waypoints.length; i++) {
+      _addArchen(player[0], waypoints[i]);
+    }
 
     _movePhase(1);
   }
 
   function _movePhase(phaseNum) {
     god.trigger('movePhaseEvent');
+    let input = prompt('Give instructions for: ');
 
     _combatPhase(phaseNum);
   }
@@ -49,18 +54,14 @@ function Game(mapImgPath) {
   function _combatPhase(phaseNum) {
     god.trigger('combatPhaseEvent');
 
-    if (phaseNum++ < 3) {
-      _movePhase(phaseNum);
-    }
-    else {
-      _endTurn();
-    }
+    if (phaseNum++ < 3) { _movePhase(phaseNum); }
+    else                { _endTurn  (); }
   }
 
   function _endTurn() {
     god.trigger('endTurnEvent');
 
-    _newTurn();
+    // _startTurn();
   }
 
   function _end() {
@@ -71,8 +72,17 @@ function Game(mapImgPath) {
   function _addArchen(player, waypoint) {
     let army = Army(god, player, waypoint);
     map.append(army.img);
-    input = input.split(',');
-    archen.moveTo(waypoint);
+    // input = input.split(',');
+    // archen.moveTo(waypoint);
+  }
+
+  function _logPhases() {
+    god.on('startEvent',     () => { console.log('The Game of Thrones has begun'); });
+    god.on('startTurnEvent', () => { console.log('Turn ' + turn + 'has begun'); });
+    god.on('moveEvent',      () => { console.log('Armies are on the move...'); });
+    god.on('combattEvent',   () => { console.log('Tension is in the air...'); });
+    god.on('endTurnEvent',   () => { console.log('Turn ' + turn + 'has ended'); });
+    god.on('endEvent',       () => { console.log('The Game of Thrones has ended'); });
   }
 
   //Gather Player data, and create Player objects

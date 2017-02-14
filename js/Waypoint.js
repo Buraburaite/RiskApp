@@ -5,11 +5,12 @@ function Waypoint(pos, imgEl, waypointType, pointName = parseString(position)) {
   let type       = waypointType;
   let name       = pointName;
 
+  const x = () => position[0];
+  const y = () => position[1];
+
   imageEl.css('left',   x() + 'px');
   imageEl.css('bottom', y() + 'px');
 
-  function x() { return position[0]; }
-  function y() { return position[1]; }
 
   return {
     position : position,
