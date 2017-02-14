@@ -7,6 +7,8 @@ function Game(mapImgPath) {
 
   const god = $({});
 
+  let turn;
+
   /*====PHASES
   start - gather player info
   startTurn - Increment turn count, gather orders
@@ -21,7 +23,7 @@ function Game(mapImgPath) {
   function start() {
     god.trigger('startEvent'); //doesn't currently do anything
 
-    this.turn = 0;
+    turn = 0;
     // promptForPlayers();
 
     _newTurn();
@@ -35,24 +37,30 @@ function Game(mapImgPath) {
     _addArchen(player[0], 50, 50);
     let input = prompt('Give instructions: ');
 
-
-    god.trigger('moveEvent');
-
+    _movePhase(1);
   }
 
-  function _movePhase() {
+  function _movePhase(phaseNum) {
     god.trigger('movePhaseEvent');
 
+    _combatPhase(phaseNum);
   }
 
-  function _combatPhase() {
+  function _combatPhase(phaseNum) {
     god.trigger('combatPhaseEvent');
 
+    if (phaseNum++ < 3) {
+      _movePhase(phaseNum);
+    }
+    else {
+      _endTurn();
+    }
   }
 
   function _endTurn() {
     god.trigger('endTurnEvent');
 
+    _newTurn();
   }
 
   function _end() {

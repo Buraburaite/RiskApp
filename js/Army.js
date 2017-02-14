@@ -13,25 +13,25 @@ function Army(emitter, player, startWaypoint) {
   let waypoint = startWaypoint;
   let actionsLeft = 2;
 
-  function moveTo(waypoint) {
-    this.waypoint = waypoint;
-    img.style.left = x + 'px';
-    img.style.bottom = y + 'px';
+  function moveTo(newWaypoint) {
+    waypoint = newWaypoint;
+    img.style.left = waypoint.x() + 'px';
+    img.style.bottom = waypoint.y() + 'px';
 
   }
 
   function onMoveEvent(orders) {
     if (orders[commander.name][waypoint] && actionsLeft > 0) {
-      this.actionsLeft--;
-      console.log('Found me! ' + this.commander.name + '\'s army at ' + this.waypoint.name);
+      actionsLeft--;
+      console.log('Found me! ' + commander.name + '\'s army at ' + waypoint.name);
     }
   }
 
-  function onEndTurnEvent() { this.actionsLeft = 2; }
+  function onEndTurnEvent() { actionsLeft = 2; }
 
   //Add events
-  emitter.on('moveEvent',    (orders) => { onMoveEvent   (orders); });
-  emitter.on('endTurnEvent', ()       => { onEndTurnEvent();       });
+  god.on('moveEvent',    (orders) => { onMoveEvent   (orders); });
+  god.on('endTurnEvent', ()       => { onEndTurnEvent();       });
 
   return {
     img : img,
