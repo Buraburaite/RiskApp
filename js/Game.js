@@ -72,14 +72,12 @@ function Game(mapImgPath) {
 
   function getArmies(player, waypoint) {
     let armies = [];
-    console.log(armies);
     _god.trigger('queryArmies', {
       'armies': armies,
       'player': player,
       'waypoint': waypoint
     });
 
-    console.log(armies);
     return armies;
   }
 

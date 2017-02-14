@@ -89,17 +89,21 @@ function Army(emitter, map, player, startWaypoint) {
 
   function onQueryArmies(e, query) {
     if (query.player === commander && query.waypoint === _waypoint) {
-      query.armies.push();
+      query.armies.push(thisArmy);
     }
   }
+
 
   //Add events
   _god.on('moveEvent',    (e, orders) => { onMoveEvent   (orders); });
   _god.on('endTurnEvent', (e)         => { onEndTurnEvent();       });
   _god.on('queryArmies',  (e, query)  => { onQueryArmies (e, query);  });
 
-  return {
+  let thisArmy = {
     commander : commander,
     moveTo : moveTo
   };
+  console.log('this: ' + thisArmy);
+
+  return thisArmy;
 }
