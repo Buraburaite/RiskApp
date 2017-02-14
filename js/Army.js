@@ -1,4 +1,4 @@
-function Army(emitter, player, startWaypoint) {
+function Army(emitter, map, player, startWaypoint) {
 
   const commander = player;
 
@@ -7,12 +7,69 @@ function Army(emitter, player, startWaypoint) {
   let _waypoint    = null;
   let _actionsLeft = 2;
 
+  let mons = [
+    'Abomasnow',
+    'Abra',
+    'Absol',
+    'Accelgor',
+    'Aegislash- A',
+    'Aegislash- D',
+    'Aerodactyl',
+    'AeroVeedramon',
+    'Aggron',
+    'Agnimon',
+    'Agumon',
+    'Aipom',
+    'Airdramon',
+    'Alakazam',
+    'Aldamon',
+    'Allomon',
+    'Alomomola',
+    'Alphamon',
+    'Alraumon',
+    'Altaria',
+    'Amaura',
+    'Ambipom',
+    'Amoonguss',
+    'Ampharos',
+    'AncientBeetlemon',
+    'AncientGarurumon',
+    'AncientGreymon',
+    'AncientKazemon',
+    'AncientMegatheriumon',
+    'AncientMermaimon',
+    'AncientSphinxmon',
+    'AncientTroiamon',
+    'AncientVolcamon',
+    'Andromon',
+    'Angemon',
+    'Angewomon',
+    'Ankylomon',
+    'Anorith',
+    'Antiramon',
+    'Anubimon',
+    'Apemon',
+    'Apocalymon',
+    'Apollomon',
+    'Aquilamon',
+    'Arachimon',
+    'Arbok',
+    'Arcanine',
+    'Arceus',
+    'Archelomon',
+    'Archen',
+    'Archeops',
+    'Argomon'
+  ];
 
-  _img.src = "../IgnoreThis/Assets/Images/Archen.png";
+
+
+  _img.src = '../IgnoreThis/Assets/Images/Mons/' + _.sample(mons) + '.png';
   _img.width = 100;
   _img.height = 60;
   _img.className = 'army';
   _moveTo(startWaypoint);
+  map.append(_img);
 
 
   function _moveTo(newWaypoint) {

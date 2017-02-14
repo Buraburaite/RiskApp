@@ -1,14 +1,13 @@
 function Game(mapImgPath) {
 
-  const player = [];
-  const world = World(mapImgPath);
-  const map = world.map;
-  const waypoints = world.waypoints;
-  const players = [];
+  const _players = [];
+  const _world = World(mapImgPath);
+  const _map = _world.map;
+  const _waypoints = _world.waypoints;
 
-  const god = $({});
+  const _god = $({});
 
-  let turn;
+  let _turn;
 
   /*====PHASES
   start - gather player info
@@ -24,65 +23,62 @@ function Game(mapImgPath) {
   function start() {
     _logPhases();
 
-    god.trigger('startEvent'); //doesn't currently do anything
+    _god.trigger('startEvent'); //doesn't currently do anything
 
-    turn = 0;
+    _turn = 0;
     // promptForPlayers();
-    players.push(Player('Javi', 1, 'Targaeryn'));
+    _players.push(Player('Javi', 1, 'Targaeryn'));
+
+    for (let i = 0; i < _waypoints.length; i++) {
+      _addMon(_waypoints[i]);
+    }
 
     _startTurn();
   }
 
   function _startTurn() {
-    turn++;
-    god.trigger('startTurnEvent');
+    _turn++;
+    _god.trigger('startTurnEvent');
+    let orders = {};
 
-    for (let i = 0; i < waypoints.length; i++) {
-      _addArchen(player[0], waypoints[i]);
-    }
+
 
     _movePhase(1);
   }
 
   function _movePhase(phaseNum) {
-    god.trigger('movePhaseEvent');
-    let input = prompt('Give instructions for: ');
+    _god.trigger('movePhaseEvent', {});
 
     _combatPhase(phaseNum);
   }
 
   function _combatPhase(phaseNum) {
-    god.trigger('combatPhaseEvent');
+    _god.trigger('combatPhaseEvent');
 
     if (phaseNum++ < 3) { _movePhase(phaseNum); }
     else                { _endTurn  (); }
   }
 
   function _endTurn() {
-    god.trigger('endTurnEvent');
+    _god.trigger('endTurnEvent');
 
     // _startTurn();
   }
 
   function _end() {
-    god.trigger('endEvent');
+    _god.trigger('endEvent');
 
   }
 
-  function _addArchen(player, waypoint) {
-    let army = Army(god, player, waypoint);
-    map.append(army.img);
-    // input = input.split(',');
-    // archen.moveTo(waypoint);
-  }
+  function _addMon(waypoint) { Army(_god, _map, _players[0], waypoint); }
 
   function _logPhases() {
-    god.on('startEvent',     () => { console.log('The Game of Thrones has begun'); });
-    god.on('startTurnEvent', () => { console.log('Turn ' + turn + 'has begun'); });
-    god.on('moveEvent',      () => { console.log('Armies are on the move...'); });
-    god.on('combattEvent',   () => { console.log('Tension is in the air...'); });
-    god.on('endTurnEvent',   () => { console.log('Turn ' + turn + 'has ended'); });
-    god.on('endEvent',       () => { console.log('The Game of Thrones has ended'); });
+    _god.on('startEvent',     () => { console.log('The Game of Thrones has begun'); });
+    _god.on('startTurnEvent', () => { console.log('Turn ' + _turn + ' has begun'); });
+    _god.on('moveEvent',      () => { console.log('Armies are on the move...'); });
+    _god.on('combattEvent',   () => { console.log('Tension is in the air...'); });
+    _god.on('endTurnEvent',   () => { console.log('Turn ' + _turn + ' has ended'); });
+    _god.on('endEvent',       () => { console.log('The Game of Thrones has ended'); });
   }
 
   //Gather Player data, and create Player objects
@@ -108,13 +104,11 @@ function Game(mapImgPath) {
       names.push(name);
       houses.push(house);
 
-      players.push(Player(name, i, house));
+      _players.push(Player(name, i, house));
     }
   }
 
   return {
-    world: world,
-    players: player,
     start : start
   };
 }
