@@ -5,13 +5,66 @@ function Game(mapImgPath) {
   const map = world.map;
   const players = [];
 
-  let turn = 0;
-
   const god = $({});
 
-  function _addArchen(player, x, y) {
-    let army = Army(ee, player, x, y);
+  /*====PHASES
+  start - gather player info
+  startTurn - Increment turn count, gather orders
+  movePhase - up to 1 move action
+  combatPhase - up to 1 combat action
+  movePhase - up to 1 move action
+  combatPhase - up to 1 combat action
+  endTurn - reset Army.actionsLeft (think of it like night time)
+  end - send victory/defeat message
+  ====*/
+
+  function start() {
+    god.trigger('startEvent'); //doesn't currently do anything
+
+    this.turn = 0;
+    // promptForPlayers();
+
+    _newTurn();
+  }
+
+  function _newTurn() {
+    god.trigger('newTurnEvent');
+    turn++;
+
+    _addArchen(player[0], 0, 0);
+    _addArchen(player[0], 50, 50);
+    let input = prompt('Give instructions: ');
+
+
+    god.trigger('moveEvent');
+
+  }
+
+  function _movePhase() {
+    god.trigger('movePhaseEvent');
+
+  }
+
+  function _combatPhase() {
+    god.trigger('combatPhaseEvent');
+
+  }
+
+  function _endTurn() {
+    god.trigger('endTurnEvent');
+
+  }
+
+  function _end() {
+    god.trigger('endEvent');
+
+  }
+
+  function _addArchen(player, waypoint) {
+    let army = Army(god, player, waypoint);
     map.append(army.img);
+    input = input.split(',');
+    archen.moveTo(waypoint);
   }
 
   //Gather Player data, and create Player objects
@@ -39,29 +92,6 @@ function Game(mapImgPath) {
 
       players.push(Player(name, i, house));
     }
-  }
-
-  function start() {
-    god.trigger('startEvent'); //doesn't currently do anything
-
-    // promptForPlayers();
-
-    god.trigger('newTurnEvent');
-    _newTurn();
-  }
-
-  function _newTurn() {
-    turn++;
-
-    _addArchen(player[0], 0, 0);
-    _addArchen(player[0], 50, 50);
-    let input = prompt('Give instructions: ');
-
-
-    god.trigger('moveEvent');
-    input = input.split(',');
-    archen.moveTo(input[0], input[1]);
-
   }
 
   return {

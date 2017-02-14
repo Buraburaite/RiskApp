@@ -7,6 +7,8 @@ function World(mapImgPath) {
 
   
 
+
+
   return {
     map : map
   };

@@ -1,6 +1,8 @@
-function Army(emitter, player, startX, startY) {
+function Army(emitter, player, startWaypoint) {
 
-  const img = new Image();
+  const god       = emitter;
+  const commander = player;
+  const img       = new Image();
   img.src = "../IgnoreThis/Assets/Images/Archen.png";
   img.width = 100;
   img.height = 60;
@@ -8,30 +10,28 @@ function Army(emitter, player, startX, startY) {
   img.style.left = startX + 'px';
   img.style.bottom = startY + 'px';
 
-  let position = [startX, startY];
+  let waypoint = startWaypoint;
   let actionsLeft = 2;
 
-  function moveTo(x, y) {
-    position = [x,y];
+  function moveTo(waypoint) {
+    this.waypoint = waypoint;
     img.style.left = x + 'px';
     img.style.bottom = y + 'px';
 
   }
 
-  function onNewTurnEvent() {
-    actionsLeft = 2;
-  }
-
   function onMoveEvent(orders) {
-    if (orders[player.name][waypoint] && actionsLeft > 0) {
-      console.log('Found me! ' + player.name + '\'s army at ' + waypoint.name);
-      actionsLeft--;
+    if (orders[commander.name][waypoint] && actionsLeft > 0) {
+      this.actionsLeft--;
+      console.log('Found me! ' + this.commander.name + '\'s army at ' + this.waypoint.name);
     }
   }
 
+  function onEndTurnEvent() { this.actionsLeft = 2; }
+
   //Add events
-  emitter.on('newTurnEvent', ()       => { onNewTurnEvent(); });
   emitter.on('moveEvent',    (orders) => { onMoveEvent   (orders); });
+  emitter.on('endTurnEvent', ()       => { onEndTurnEvent();       });
 
   return {
     img : img,
