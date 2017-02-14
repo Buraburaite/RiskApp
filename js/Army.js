@@ -1,6 +1,4 @@
-function Army(ee, startX, startY) {
-
-  ee.on('pizza', () => { moveTo(100,100) });
+function Army(emitter, player, startX, startY) {
 
   const img = new Image();
   img.src = "../IgnoreThis/Assets/Images/Archen.png";
@@ -10,7 +8,8 @@ function Army(ee, startX, startY) {
   img.style.left = startX + 'px';
   img.style.bottom = startY + 'px';
 
-  let position = [0,0];
+  let position = [startX, startY];
+  let actionsLeft = 2;
 
   function moveTo(x, y) {
     position = [x,y];
@@ -19,13 +18,25 @@ function Army(ee, startX, startY) {
 
   }
 
-  function addListeners() {
-
+  function onNewTurnEvent() {
+    actionsLeft = 2;
   }
+
+  function onMoveEvent(orders) {
+    if (orders[player.name][waypoint] && actionsLeft > 0) {
+      console.log('Found me! ' + player.name + '\'s army at ' + waypoint.name);
+      actionsLeft--;
+    }
+  }
+
+  //Add events
+  emitter.on('newTurnEvent', ()       => { onNewTurnEvent(); });
+  emitter.on('moveEvent',    (orders) => { onMoveEvent   (orders); });
 
   return {
     img : img,
     position : position,
-    moveTo : moveTo
+    moveTo : moveTo,
+    actionsLeft : actionsLeft
   };
 }

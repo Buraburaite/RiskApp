@@ -6,5 +6,6 @@ testBtn.click(() => {
 });
 
 
-
-game.start();
+$(document).ready(() => {
+  game.start();
+});
