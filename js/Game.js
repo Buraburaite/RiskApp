@@ -7,6 +7,7 @@ function Game(mapImgPath) {
   const players = [];
   const waypoints = _world.waypoints;
   let turn;
+  let currentPlayer;
   let latestArmyQuery;
 
 
@@ -29,10 +30,10 @@ function Game(mapImgPath) {
     _turn = 0;
     // promptForPlayers();
     players.push(Player('Javi', 1, 'Targaeryn'));
+    players.push(Player('Durkee', 2, 'Baratheon'));
 
-    for (let i = 0; i < waypoints.length; i++) {
-      _addArmyAt(waypoints[i]);
-    }
+    _addArmy(players[0], waypoints[0]);
+    _addArmy(players[1], waypoints[3]);
 
     _god.trigger('startEvent'); //doesn't currently do anything
     _startTurn();
@@ -41,7 +42,11 @@ function Game(mapImgPath) {
   function _startTurn() {
     _turn++;
     _god.trigger('startTurnEvent');
-    let orders = {};
+
+    players.forEach((player) => {
+      currentPlayer = player;
+      
+    });
 
     _movePhase(1);
   }
@@ -70,7 +75,10 @@ function Game(mapImgPath) {
 
   }
 
-  function _addArmyAt(waypoint) { Army(_god, _map, players[0], waypoint); }
+  function _addArmy(player, waypoint) {
+    Army(_god, _map, player, waypoint);
+    updateWorld();
+  }
 
   function queryArmies() {
     let query = {};
@@ -133,6 +141,7 @@ function Game(mapImgPath) {
   }
 
   return {
+    currentPlayer : currentPlayer,
     latestArmyQuery : latestArmyQuery,
     queryArmies : queryArmies,
     moveArmies: moveArmies,

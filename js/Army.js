@@ -74,6 +74,9 @@ function Army(emitter, mapElement, commandingPlayer, startWaypoint) {
 
 
   function moveTo(newWaypoint) {
+    if (waypoint) { waypoint.banner = 'neutral'; }
+    newWaypoint.banner = player.house.toLowerCase();
+
     waypoint = newWaypoint;
     _img.style.left = waypoint.x;
     _img.style.bottom = waypoint.y;

@@ -4,11 +4,11 @@
   -ms-border: 1px solid black;
   border: px solid black;
 }
-@mixin waypointBorder($color) {
-  -webkit-border: 4px solid $color;
-  -moz-border: 4px solid $color;
-  -ms-border:4px solid $color;
-  border: 4px solid $color;
+@mixin waypointBorder($px, $style, $color) {
+  -webkit-border: $px $style $color;
+  -moz-border: $px $style $color;
+  -ms-border:$px $style $color;
+  border: $px $style $color;
 }
 
 #navbar-spacing {
@@ -42,18 +42,23 @@
       bottom: 0px;
       text-align: center;
       font-weight: bold;
-      background-color: blue;
+
+    }
+
+    .neutral {
+      background-color: white;
+      @include waypointBorder(2px, solid, black);
     }
 
     .targaeryn {
       color: white;
       background-color: red;
-      @include waypointBorder(black);
+      @include waypointBorder(4px, solid, black);
     }
 
     .baratheon {
       background-color: yellow;
-      @include waypointBorder(black);
+      @include waypointBorder(4px, solid, black);
     }
   }
 }

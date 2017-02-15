@@ -1,8 +1,10 @@
-function Waypoint(emitter, mapElement, percentageArr, waypointType, waypointName = parseString(positionArr)) {
+function Waypoint(emitter, currentPlayer, mapElement, percentageArr, waypointType, waypointName = parseString(positionArr)) {
 
   const percentPosition = percentageArr;
   let type = waypointType;
   let name = waypointName;
+  let residingPlayer = null;
+  let _banner = 'neutral';
 
   let _armyCount = 0;
   const _god = emitter;
@@ -15,7 +17,7 @@ function Waypoint(emitter, mapElement, percentageArr, waypointType, waypointName
 
   let domEl = $('<span/>')
   .addClass('waypoint')
-  .addClass('targaeryn')
+  .addClass(_banner)
   .attr('id', name)
   .html(_armyCount)
   .css('left',   _calcX() + 'px')
@@ -23,12 +25,14 @@ function Waypoint(emitter, mapElement, percentageArr, waypointType, waypointName
   _mapEl.append(domEl);
 
   domEl.click(() => {
-    console.log(mapY());
+    if (currentPlayer.name === 'residingPlayer') {
+      console.log('yes, it\'s your turn');
+    }
   });
 
   function onWorldUpdate(e, query) {
-     _armyCount = query[name].length;
-     domEl.html(_armyCount);
+    _armyCount = query[name].length;
+    domEl.html(_armyCount);
   }
 
   _god.on('worldUpdate', (e, query) => { onWorldUpdate(e, query); });
@@ -38,9 +42,18 @@ function Waypoint(emitter, mapElement, percentageArr, waypointType, waypointName
     domEl : domEl,
     type : type,
     name :name,
+
     get x() { return domEl.css('left');   },
     get y() { return domEl.css('bottom'); },
+
     get armyCount()         { return _armyCount; },
-    set armyCount(newCount) { _armyCount = newCount; domEl.html(_armyCount); }
+    set armyCount(newCount) { _armyCount = newCount; domEl.html(_armyCount); },
+
+    get banner() { return _banner;   },
+    set banner(newBanner) {
+      domEl.removeClass(_banner);
+      domEl.addClass(newBanner);
+      _banner = newBanner;
+    },
   };
 }
