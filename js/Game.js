@@ -1,14 +1,19 @@
 function Game(mapImgPath) {
 
+  let currentPlayer, ready, readyChecker;
   const _god = $({});
   const _map = $('.map');
-  const _world = World(_god, _map, mapImgPath);
+  const _world = World(_god, currentPlayer, _map, mapImgPath);
 
   const players = [];
   const waypoints = _world.waypoints;
   let turn;
-  let currentPlayer;
   let latestArmyQuery;
+  let checkIfReady = () => {
+    if (ready) {
+      clearInterval(readyChecker);
+    }
+  };
 
 
 
@@ -27,7 +32,7 @@ function Game(mapImgPath) {
     _logPhases();
 
 
-    _turn = 0;
+    turn = 0;
     // promptForPlayers();
     players.push(Player('Javi', 1, 'Targaeryn'));
     players.push(Player('Durkee', 2, 'Baratheon'));
@@ -40,13 +45,17 @@ function Game(mapImgPath) {
   }
 
   function _startTurn() {
-    _turn++;
+    turn++;
     _god.trigger('startTurnEvent');
 
-    players.forEach((player) => {
-      currentPlayer = player;
-      
-    });
+    // players.forEach((player) => {
+    //   currentPlayer = player;
+    //   ready = false;
+    //   readyChecker = setInterval(checkIfReady, 80);
+    //   while (!ready) {
+    //     console.log(currentPlayer.name);
+    //   }
+    // });
 
     _movePhase(1);
   }
@@ -145,6 +154,7 @@ function Game(mapImgPath) {
     latestArmyQuery : latestArmyQuery,
     queryArmies : queryArmies,
     moveArmies: moveArmies,
+    ready : ready,
     start : start,
     turn : turn,
     waypoints : waypoints

@@ -1,8 +1,9 @@
-function World(emitter, mapElement, mapBackgroundPath) {
+function World(emitter, currentPlayer, mapElement, mapBackgroundPath) {
 
   const waypoints = [];
-  
+
   const _god = emitter;
+  const _currentPlayer = currentPlayer;
   const _map = mapElement;
 
   // waypoints.push(Waypoint([250,400], $('#Tengoku'), 'Landmark', 'Tengoku'));
@@ -20,7 +21,7 @@ function World(emitter, mapElement, mapBackgroundPath) {
   addWaypoint(20, 65, 'Landmark', 'Nirvana');
 
   function addWaypoint(xPercentage, yPercentage, type, name) {
-    waypoints.push(Waypoint(_god, _map, [xPercentage,yPercentage], type, name));
+    waypoints.push(Waypoint(_god, _currentPlayer, _map, [xPercentage,yPercentage], type, name));
   }
 
   function updateWorld() {

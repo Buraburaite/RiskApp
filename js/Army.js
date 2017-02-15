@@ -92,14 +92,6 @@ function Army(emitter, mapElement, commandingPlayer, startWaypoint) {
   function onEndTurnEvent(e) { _actionsLeft = 2; }
 
   function onQueryArmies(e, query) {
-    // let p = player.name, wp = waypoint.name;
-    //
-    // if (query[p])     { query[p].push(thisArmy); }
-    // else              { query[p] = [thisArmy]; }
-    // if (query[wp])    { query[wp].push(thisArmy); }
-    // else              { query[wp] = [thisArmy]; }
-    // if (query[p][wp]) { query[p][wp].push(thisArmy); }
-    // else              { query[p][wp] = [thisArmy]; }
 
     query[player.name].push(thisArmy);
     query[waypoint.name].push(thisArmy);

@@ -25,7 +25,7 @@ function Waypoint(emitter, currentPlayer, mapElement, percentageArr, waypointTyp
   _mapEl.append(domEl);
 
   domEl.click(() => {
-    if (currentPlayer.name === 'residingPlayer') {
+    if (currentPlayer.name === residingPlayer.name) {
       console.log('yes, it\'s your turn');
     }
   });
