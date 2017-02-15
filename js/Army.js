@@ -1,8 +1,9 @@
-function Army(emitter, map, player, startWaypoint) {
+function Army(emitter, mapElement, player, startWaypoint) {
 
   const commander = player;
 
   const _god       = emitter;
+  const _mapEl     = mapElement;
   const _img       = new Image();
   let _waypoint    = null;
   let _actionsLeft = 2;
@@ -69,7 +70,7 @@ function Army(emitter, map, player, startWaypoint) {
   _img.height = 60;
   _img.className = 'army';
   moveTo(startWaypoint);
-  map.append(_img);
+  _mapEl.append(_img);
 
 
   function moveTo(newWaypoint) {
@@ -103,7 +104,6 @@ function Army(emitter, map, player, startWaypoint) {
     commander : commander,
     moveTo : moveTo
   };
-  console.log('this: ' + thisArmy);
 
   return thisArmy;
 }

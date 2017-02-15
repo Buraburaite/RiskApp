@@ -1,20 +1,35 @@
-function Waypoint(pos, imgEl, waypointType, pointName = parseString(position)) {
+function Waypoint(emitter, mapElement, percentageArr, waypointType, waypointName = parseString(positionArr)) {
 
-  const position = pos;
-  let imageEl    = imgEl;
-  let type       = waypointType;
-  let name       = pointName;
+  const percentPosition = percentageArr;
+  let type = waypointType;
+  let name = waypointName;
+  let armyCount = 0;
 
-  const x = () => position[0];
-  const y = () => position[1];
+  const _mapEl = mapElement;
+  const _mapX  = () => _mapEl.width();
+  const _mapY  = () => _mapEl.height();
 
-  imageEl.css('left',   x() + 'px');
-  imageEl.css('bottom', y() + 'px');
+  const x = () => percentPosition[0] / 100 * _mapX();
+  const y = () => percentPosition[1] / 100 * _mapY();
+
+
+  let domEl = $('<span/>')
+  .addClass('waypoint')
+  .addClass('targaeryn')
+  .attr('id', name)
+  .html(armyCount)
+  .css('left',   x() + 'px')
+  .css('bottom', y() + 'px');
+  _mapEl.append(domEl);
+
+  domEl.click(() => {
+    console.log(mapY());
+  });
 
 
   return {
-    position : position,
-    imageEl : imageEl,
+    percentageArr : percentageArr,
+    domEl : domEl,
     type : type,
     name :name,
     x : x,

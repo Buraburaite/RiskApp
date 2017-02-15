@@ -1,11 +1,12 @@
 function Game(mapImgPath) {
 
-  const _players = [];
-  const _world = World(mapImgPath);
-  const _map = _world.map;
-  const _waypoints = _world.waypoints;
 
   const _god = $({});
+  const _players = [];
+  const _map = $('.map');
+  const _world = World(_god, _map, mapImgPath);
+  const _waypoints = _world.waypoints;
+
 
   let _turn;
 
@@ -71,7 +72,9 @@ function Game(mapImgPath) {
   function _addMon(waypoint) { Army(_god, _map, _players[0], waypoint); }
 
   function getArmies(player, waypoint) {
-    let armies = [];
+    let query = {};
+    players.forEach((p) => { query[p.name] = []; });
+    _waypoints.forEach((wp) => { query[wp.name] = []; });
     _god.trigger('queryArmies', {
       'armies': armies,
       'player': player,
