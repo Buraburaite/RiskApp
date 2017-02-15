@@ -1,11 +1,11 @@
-function Army(emitter, mapElement, player, startWaypoint) {
+function Army(emitter, mapElement, commandingPlayer, startWaypoint) {
 
-  const commander = player;
+  const player = commandingPlayer;
+  let waypoint     = null;
 
   const _god       = emitter;
   const _mapEl     = mapElement;
   const _img       = new Image();
-  let _waypoint    = null;
   let _actionsLeft = 2;
 
   let mons = [
@@ -74,14 +74,14 @@ function Army(emitter, mapElement, player, startWaypoint) {
 
 
   function moveTo(newWaypoint) {
-    _waypoint = newWaypoint;
-    _img.style.left = _waypoint.x() + 'px';
-    _img.style.bottom = _waypoint.y() + 'px';
+    waypoint = newWaypoint;
+    _img.style.left = waypoint.x;
+    _img.style.bottom = waypoint.y;
 
   }
 
   function onMoveEvent(e, orders) {
-    if (orders[commander.name][_waypoint] && _actionsLeft > 0) {
+    if (orders[player.name][waypoint] && _actionsLeft > 0) {
       _actionsLeft--;
     }
   }
@@ -89,9 +89,19 @@ function Army(emitter, mapElement, player, startWaypoint) {
   function onEndTurnEvent(e) { _actionsLeft = 2; }
 
   function onQueryArmies(e, query) {
-    if (query.player === commander && query.waypoint === _waypoint) {
-      query.armies.push(thisArmy);
-    }
+    // let p = player.name, wp = waypoint.name;
+    //
+    // if (query[p])     { query[p].push(thisArmy); }
+    // else              { query[p] = [thisArmy]; }
+    // if (query[wp])    { query[wp].push(thisArmy); }
+    // else              { query[wp] = [thisArmy]; }
+    // if (query[p][wp]) { query[p][wp].push(thisArmy); }
+    // else              { query[p][wp] = [thisArmy]; }
+
+    query[player.name].push(thisArmy);
+    query[waypoint.name].push(thisArmy);
+    query[player.name + ':' + waypoint.name].push(thisArmy);
+    query[waypoint.name + ':' + player.name].push(thisArmy);
   }
 
 
@@ -101,8 +111,9 @@ function Army(emitter, mapElement, player, startWaypoint) {
   _god.on('queryArmies',  (e, query)  => { onQueryArmies (e, query);  });
 
   let thisArmy = {
-    commander : commander,
-    moveTo : moveTo
+    player : player,
+    moveTo : moveTo,
+    waypoint : waypoint
   };
 
   return thisArmy;

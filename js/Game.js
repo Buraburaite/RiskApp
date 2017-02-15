@@ -1,14 +1,15 @@
 function Game(mapImgPath) {
 
-
   const _god = $({});
-  const _players = [];
   const _map = $('.map');
   const _world = World(_god, _map, mapImgPath);
-  const _waypoints = _world.waypoints;
+
+  const players = [];
+  const waypoints = _world.waypoints;
+  let turn;
+  let latestArmyQuery;
 
 
-  let _turn;
 
   /*====PHASES
   start - gather player info
@@ -24,16 +25,16 @@ function Game(mapImgPath) {
   function start() {
     _logPhases();
 
-    _god.trigger('startEvent'); //doesn't currently do anything
 
     _turn = 0;
     // promptForPlayers();
-    _players.push(Player('Javi', 1, 'Targaeryn'));
+    players.push(Player('Javi', 1, 'Targaeryn'));
 
-    for (let i = 0; i < _waypoints.length; i++) {
-      _addMon(_waypoints[i]);
+    for (let i = 0; i < waypoints.length; i++) {
+      _addArmyAt(waypoints[i]);
     }
 
+    _god.trigger('startEvent'); //doesn't currently do anything
     _startTurn();
   }
 
@@ -69,65 +70,74 @@ function Game(mapImgPath) {
 
   }
 
-  function _addMon(waypoint) { Army(_god, _map, _players[0], waypoint); }
+  function _addArmyAt(waypoint) { Army(_god, _map, players[0], waypoint); }
 
-  function getArmies(player, waypoint) {
+  function queryArmies() {
     let query = {};
-    players.forEach((p) => { query[p.name] = []; });
-    _waypoints.forEach((wp) => { query[wp.name] = []; });
-    _god.trigger('queryArmies', {
-      'armies': armies,
-      'player': player,
-      'waypoint': waypoint
+    players.forEach((p)  => {
+      waypoints.forEach((wp) => {
+        query[p.name]  = [];
+        query[wp.name] = [];
+        query[p.name + ':' + wp.name] = [];
+        query[wp.name + ':' + p.name] = [];
+      });
     });
+    _god.trigger('queryArmies', query);
+    latestArmyQuery = query;
 
-    return armies;
+    return query;
   }
+
+  function moveArmies(originNum, targetNum) {
+    player = players[0];
+    origin = waypoints[originNum];
+    let query = queryArmies(player, origin);
+    query[waypoints[originNum].name].forEach((army) => { army.moveTo(waypoints[targetNum]); });
+    updateWorld();
+  }
+
+  function updateWorld() { _god.trigger('worldUpdate', queryArmies()); }
 
   function _logPhases() {
     _god.on('startEvent',     (e) => { console.log('The Game of Thrones has begun'); });
-    _god.on('startTurnEvent', (e) => { console.log('Turn ' + _turn + ' has begun'); });
+    _god.on('startTurnEvent', (e) => { console.log('Turn ' + turn + ' has begun'); });
     _god.on('moveEvent',      (e) => { console.log('Armies are on the move...'); });
     _god.on('combattEvent',   (e) => { console.log('Tension is in the air...'); });
-    _god.on('endTurnEvent',   (e) => { console.log('Turn ' + _turn + ' has ended'); });
+    _god.on('endTurnEvent',   (e) => { console.log('Turn ' + turn + ' has ended'); });
     _god.on('endEvent',       (e) => { console.log('The Game of Thrones has ended'); });
   }
 
   //Gather Player data, and create Player objects
   function promptForPlayers() {
 
-    let name, names = [], house, houses = [];
+    let names = ['armies'], houses = ['armies']; //'armies' is a reserved name
+    let waypointNames = waypoints.map((wp) => wp.name);
 
     let input = prompt('How many players?');
     for (let i = 1; i < +input + 1; i++) {
 
-      name = prompt('Name of Player ' + i + '?');
-      while (names.includes(name)) {
+      input = prompt('Name of Player ' + i + '?');
+      while (names.includes(input) || waypointNames.includes(input)) {
         name = prompt('Name already taken, please enter a new name...');
       }
+      names.push(input);
 
-      house = prompt('What is the name of your house?');
-      while (houses.includes(houses)) {
+      input = prompt('What is the name of your house?');
+      while (houses.includes(input) || waypointNames.includes(input)) {
         house = prompt('Name already taken, please enter a new name...');
       }
+      houses.push(input);
 
-      names.push(name);
-      houses.push(house);
-
-      _players.push(Player(name, i, house));
+      players.push(Player(name, i, house));
     }
   }
 
-  function moveMon(originNum, targetNum) {
-    player = _players[0];
-    origin = _waypoints[originNum];
-    let armies = getArmies(player, origin);
-    armies.forEach((mon) => { mon.moveTo(_waypoints[targetNum]); });
-    console.log(armies);
-  }
-
   return {
-    moveMon: moveMon,
-    start : start
+    latestArmyQuery : latestArmyQuery,
+    queryArmies : queryArmies,
+    moveArmies: moveArmies,
+    start : start,
+    turn : turn,
+    waypoints : waypoints
   };
 }

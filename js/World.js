@@ -1,9 +1,9 @@
 function World(emitter, mapElement, mapBackgroundPath) {
 
-  const _map = mapElement;
   const waypoints = [];
-
+  
   const _god = emitter;
+  const _map = mapElement;
 
   // waypoints.push(Waypoint([250,400], $('#Tengoku'), 'Landmark', 'Tengoku'));
   // waypoints.push(Waypoint([400,325], $('#Eudaimonia'), 'Landmark', 'Eudaimonia'));
@@ -24,7 +24,9 @@ function World(emitter, mapElement, mapBackgroundPath) {
   }
 
   function updateWorld() {
-    _god.trigger('updateWorld')
+    let query = {};
+    _god.trigger('queryArmies', query);
+    waypoints.forEach((wp) => { waypoint.armyCount = query[wp.name]; });
   }
 
 
