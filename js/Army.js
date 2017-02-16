@@ -74,13 +74,18 @@ function Army(commandingPlayer, startWaypoint) {
 
 
   function moveTo(newWaypoint) {
-    if (waypoint) { waypoint.banner = 'neutral'; }
-    newWaypoint.banner = player.house.toLowerCase();
+    //If you were already stationed somewhere, clean up before leaving
+    if (waypoint) {
+      waypoint.banner = 'neutral';
+    }
 
     waypoint = newWaypoint;
+    waypoint.banner = player.house.toLowerCase();
     // img.style.left = waypoint.x;
     img.style.left = +waypoint.x.replace('px','') + 50 + 'px';
     img.style.bottom = waypoint.y;
+
+    waypoint.residingPlayer = player; //temp solution
 
   }
 

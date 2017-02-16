@@ -10,6 +10,7 @@ function Game(mapImgPath) {
     orders : null,
     phase : null,
     players : [],
+    prevClick : null,
     startGame : null,
     startTurn : null,
     movePhase : null,
@@ -72,16 +73,6 @@ function Game(mapImgPath) {
   function startTurn() {
     GAME.phase = 'Start Phase';
     god.trigger('startTurn');
-
-    // players.forEach((player) => {
-    //   currentPlayer = player;
-    //   ready = false;
-    //   readyChecker = setInterval(checkIfReady, 80);
-    //   while (!ready) {
-    //     console.log(currentPlayer.name);
-    //   }
-    // });
-    // currentPlayer = null;
   }
   GAME.startTurn = startTurn;
 
@@ -89,6 +80,7 @@ function Game(mapImgPath) {
     GAME.phase = 'Move Phase ' + phaseNum;
 
     GAME.orders = Orders();
+    GAME.currentPlayer = players[0];
     god.trigger('movePhase');
   }
   GAME.movePhase = movePhase;

@@ -5,10 +5,13 @@ function Waypoint(percentageArr, waypointType, waypointName = parseString(positi
   let name = waypointName;
   let residingPlayer = null;
   let banner = 'neutral';
+  let donePlayers = 0;
+  // let armies; eventually, we want a variable like to auto-refresh
 
   let armyCount = 0;
   const god = GAME.god;
   const mapEl = GAME.map;
+  const players = GAME.players;
   const mapX  = () => mapEl.width();
   const mapY  = () => mapEl.height();
 
@@ -24,7 +27,7 @@ function Waypoint(percentageArr, waypointType, waypointName = parseString(positi
   .css('bottom', calcY() + 'px');
   mapEl.append(domEl);
 
-  function getArmies() {
+  function getArmies() { //not really good enough, could get out of sync
     return GAME.latestArmyQuery[name];
   }
 
@@ -39,11 +42,38 @@ function Waypoint(percentageArr, waypointType, waypointName = parseString(positi
   }
 
   function onMovePhase() {
-    if (GAME.currentPlayer.name === residingPlayer.name) {
-      console.log('yes, it\'s your turn');
-    }
 
-    GAME.combatPhase();
+    if (GAME.prevClick && GAME.prevClick !== thisWaypoint) {
+      let query = GAME.queryArmies();
+      let arrivingArmies = query[GAME.prevClick.name];
+
+      console.log('Hello World!');
+      arrivingArmies.forEach((army) => {
+        army.moveTo(thisWaypoint);
+      });
+
+      let nextPlayer = players[players.indexOf(GAME.currentPlayer) + 1];
+      console.log("Your turn: " + nextPlayer.name);
+      GAME.currentPlayer = nextPlayer;
+      prevClick = null;
+      donePlayers++;
+
+      if (donePlayers === players.length) {
+        // GAME.combatPhase(); //ready need to wire up that continue button (Friday I guess?)
+        console.log("done!");
+      }
+
+    }
+    else if (GAME.currentPlayer === residingPlayer || GAME.prevClick === thisWaypoint) {
+      // logs if currentPlayer's location or reclick
+      // if (GAME.prevClick === thisWaypoint) {
+      //   console.log('reclick');
+      // }
+      // else {
+      //   console.log('selected current player\'s waypoint');
+      // }
+      GAME.prevClick = thisWaypoint;
+    }
   }
 
   function onCombatPhase() {
@@ -77,7 +107,7 @@ function Waypoint(percentageArr, waypointType, waypointName = parseString(positi
   god.on('endGame',     (e) => { domEl.off('click'); domEl.click(onEndGame);     });
   god.on('worldUpdate', (e, query) => { onWorldUpdate(e, query); });
 
-  return {
+  let thisWaypoint =  {
     percentageArr : percentageArr,
     domEl : domEl,
     getArmies : getArmies,
@@ -90,6 +120,9 @@ function Waypoint(percentageArr, waypointType, waypointName = parseString(positi
     get armyCount()         { return armyCount; },
     set armyCount(newCount) { armyCount = newCount; domEl.html(armyCount); },
 
+    get residingPlayer()          { return residingPlayer; },
+    set residingPlayer(newPlayer) { residingPlayer = newPlayer; },
+
     get banner() { return banner;   },
     set banner(newBanner) {
       domEl.removeClass(banner);
@@ -97,4 +130,6 @@ function Waypoint(percentageArr, waypointType, waypointName = parseString(positi
       banner = newBanner;
     },
   };
+
+  return thisWaypoint;
 }
