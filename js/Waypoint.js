@@ -8,7 +8,6 @@ function Waypoint(percentageArr, waypointType, waypointName = parseString(positi
 
   let armyCount = 0;
   const god = GAME.god;
-  const orders = GAME.orders;
   const mapEl = GAME.map;
   const mapX  = () => mapEl.width();
   const mapY  = () => mapEl.height();
@@ -35,13 +34,12 @@ function Waypoint(percentageArr, waypointType, waypointName = parseString(positi
   }
 
   function onStartTurn() {
-    let orders = GAME.orders;
 
     GAME.movePhase();
   }
 
   function onMovePhase() {
-    if (currentPlayer.name === residingPlayer.name) {
+    if (GAME.currentPlayer.name === residingPlayer.name) {
       console.log('yes, it\'s your turn');
     }
 

@@ -85,7 +85,7 @@ function Army(commandingPlayer, startWaypoint) {
   }
 
   function onMovePhase(e) {
-    if (GAME.orders[player.name][waypoint] && actionsLeft > 0) {
+    if (GAME.orders[player.name][waypoint.name] && actionsLeft > 0) {
       actionsLeft--;
     }
   }

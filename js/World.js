@@ -1,9 +1,8 @@
 function World(mapBackgroundPath) {
 
-  const waypoints = [];
-
-  const god = GAME.god;
-  const map = GAME.map;
+  const god       = GAME.god;
+  const map       = GAME.map;
+  const waypoints = GAME.waypoints;
 
   // waypoints.push(Waypoint([250,400], $('#Tengoku'), 'Landmark', 'Tengoku'));
   // waypoints.push(Waypoint([400,325], $('#Eudaimonia'), 'Landmark', 'Eudaimonia'));
@@ -30,7 +29,5 @@ function World(mapBackgroundPath) {
   }
 
 
-  return {
-    waypoints : waypoints
-  };
+  return {};
 }

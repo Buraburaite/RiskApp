@@ -18,18 +18,22 @@ function Game(mapImgPath) {
     endGame : null,
     turn : null,
     updateWorld : null,
-    waypoints : null
+    waypoints : []
   };
 
   //Could do some destructuring here, but whatever
 
+  /*====
+  It is only okay to create shortened references
+  for these four parts of GAME, anywhere in the program
+  (world is not part of GAME)
+  ====*/
   const god = GAME.god;
   const map = GAME.map;
   const players = GAME.players;
-
   const world = World(mapImgPath);
-  const waypoints = world.waypoints;
-  GAME.waypoints = world.waypoints;
+  const waypoints = GAME.waypoints;
+
 
   // let checkIfReady = () => {
   //   if (ready) {

@@ -11,7 +11,5 @@ function Orders() {
   });
 
 
-  return {
-    orders : orders
-  };
+  return orders;
 }
