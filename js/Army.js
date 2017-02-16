@@ -90,9 +90,6 @@ function Army(commandingPlayer, startWaypoint) {
   }
 
   function onMovePhase(e) {
-    if (GAME.orders[player.name][waypoint.name] && actionsLeft > 0) {
-      actionsLeft--;
-    }
   }
 
   function onEndTurn(e) { actionsLeft = 2; }

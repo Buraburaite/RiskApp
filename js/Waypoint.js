@@ -5,8 +5,10 @@ function Waypoint(percentageArr, waypointType, waypointName = parseString(positi
   let name = waypointName;
   let residingPlayer = null;
   let banner = 'neutral';
-  let donePlayers = 0;
   // let armies; eventually, we want a variable like to auto-refresh
+
+  let nextPlayer = null;
+  let donePlayers = 0;
 
   let armyCount = 0;
   const god = GAME.god;
@@ -52,10 +54,10 @@ function Waypoint(percentageArr, waypointType, waypointName = parseString(positi
         army.moveTo(thisWaypoint);
       });
 
-      let nextPlayer = players[players.indexOf(GAME.currentPlayer) + 1];
+      nextPlayer = players[players.indexOf(GAME.currentPlayer) + 1];
       console.log("Your turn: " + nextPlayer.name);
       GAME.currentPlayer = nextPlayer;
-      prevClick = null;
+      GAME.prevClick = null;
       donePlayers++;
 
       if (donePlayers === players.length) {
