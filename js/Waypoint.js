@@ -1,28 +1,28 @@
-function Waypoint(emitter, currentPlayer, mapElement, percentageArr, waypointType, waypointName = parseString(positionArr)) {
+function Waypoint(percentageArr, waypointType, waypointName = parseString(positionArr)) {
 
   const percentPosition = percentageArr;
   let type = waypointType;
   let name = waypointName;
   let residingPlayer = null;
-  let _banner = 'neutral';
+  let banner = 'neutral';
 
-  let _armyCount = 0;
-  const _god = emitter;
-  const _mapEl = mapElement;
-  const _mapX  = () => _mapEl.width();
-  const _mapY  = () => _mapEl.height();
+  let armyCount = 0;
+  const god = GAME.god;
+  const mapEl = GAME.map;
+  const mapX  = () => mapEl.width();
+  const mapY  = () => mapEl.height();
 
-  const _calcX = () => percentPosition[0] / 100 * _mapX();
-  const _calcY = () => percentPosition[1] / 100 * _mapY();
+  const calcX = () => percentPosition[0] / 100 * mapX();
+  const calcY = () => percentPosition[1] / 100 * mapY();
 
   let domEl = $('<span/>')
   .addClass('waypoint')
-  .addClass(_banner)
+  .addClass(banner)
   .attr('id', name)
-  .html(_armyCount)
-  .css('left',   _calcX() + 'px')
-  .css('bottom', _calcY() + 'px');
-  _mapEl.append(domEl);
+  .html(armyCount)
+  .css('left',   calcX() + 'px')
+  .css('bottom', calcY() + 'px');
+  mapEl.append(domEl);
 
   domEl.click(() => {
     if (currentPlayer.name === residingPlayer.name) {
@@ -31,11 +31,11 @@ function Waypoint(emitter, currentPlayer, mapElement, percentageArr, waypointTyp
   });
 
   function onWorldUpdate(e, query) {
-    _armyCount = query[name].length;
-    domEl.html(_armyCount);
+    armyCount = query[name].length;
+    domEl.html(armyCount);
   }
 
-  _god.on('worldUpdate', (e, query) => { onWorldUpdate(e, query); });
+  god.on('worldUpdate', (e, query) => { onWorldUpdate(e, query); });
 
   return {
     percentageArr : percentageArr,
@@ -46,14 +46,14 @@ function Waypoint(emitter, currentPlayer, mapElement, percentageArr, waypointTyp
     get x() { return domEl.css('left');   },
     get y() { return domEl.css('bottom'); },
 
-    get armyCount()         { return _armyCount; },
-    set armyCount(newCount) { _armyCount = newCount; domEl.html(_armyCount); },
+    get armyCount()         { return armyCount; },
+    set armyCount(newCount) { armyCount = newCount; domEl.html(armyCount); },
 
-    get banner() { return _banner;   },
+    get banner() { return banner;   },
     set banner(newBanner) {
-      domEl.removeClass(_banner);
+      domEl.removeClass(banner);
       domEl.addClass(newBanner);
-      _banner = newBanner;
+      banner = newBanner;
     },
   };
 }

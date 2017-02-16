@@ -1,10 +1,9 @@
-function World(emitter, currentPlayer, mapElement, mapBackgroundPath) {
+function World(mapBackgroundPath) {
 
   const waypoints = [];
 
-  const _god = emitter;
-  const _currentPlayer = currentPlayer;
-  const _map = mapElement;
+  const god = GAME.god;
+  const map = GAME.map;
 
   // waypoints.push(Waypoint([250,400], $('#Tengoku'), 'Landmark', 'Tengoku'));
   // waypoints.push(Waypoint([400,325], $('#Eudaimonia'), 'Landmark', 'Eudaimonia'));
@@ -21,12 +20,12 @@ function World(emitter, currentPlayer, mapElement, mapBackgroundPath) {
   addWaypoint(20, 65, 'Landmark', 'Nirvana');
 
   function addWaypoint(xPercentage, yPercentage, type, name) {
-    waypoints.push(Waypoint(_god, _currentPlayer, _map, [xPercentage,yPercentage], type, name));
+    waypoints.push(Waypoint([xPercentage,yPercentage], type, name));
   }
 
   function updateWorld() {
     let query = {};
-    _god.trigger('queryArmies', query);
+    god.trigger('queryArmies', query);
     waypoints.forEach((wp) => { waypoint.armyCount = query[wp.name]; });
   }
 

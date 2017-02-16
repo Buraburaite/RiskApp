@@ -1,12 +1,12 @@
-function Army(emitter, mapElement, commandingPlayer, startWaypoint) {
+function Army(commandingPlayer, startWaypoint) {
 
   const player = commandingPlayer;
-  let waypoint     = null;
+  let waypoint = null;
 
-  const _god       = emitter;
-  const _mapEl     = mapElement;
-  const _img       = new Image();
-  let _actionsLeft = 2;
+  const god       = GAME.god;
+  const mapEl     = GAME.map;
+  const img       = new Image();
+  let actionsLeft = 2;
 
   let mons = [
     'Abomasnow',
@@ -65,12 +65,12 @@ function Army(emitter, mapElement, commandingPlayer, startWaypoint) {
 
 
 
-  _img.src = '../IgnoreThis/Assets/Images/Mons/' + _.sample(mons) + '.png';
-  _img.width = 100;
-  _img.height = 60;
-  _img.className = 'army';
+  img.src = '../IgnoreThis/Assets/Images/Mons/' + _.sample(mons) + '.png';
+  img.width = 100;
+  img.height = 60;
+  img.className = 'army';
   moveTo(startWaypoint);
-  _mapEl.append(_img);
+  mapEl.append(img);
 
 
   function moveTo(newWaypoint) {
@@ -78,18 +78,18 @@ function Army(emitter, mapElement, commandingPlayer, startWaypoint) {
     newWaypoint.banner = player.house.toLowerCase();
 
     waypoint = newWaypoint;
-    _img.style.left = waypoint.x;
-    _img.style.bottom = waypoint.y;
+    img.style.left = waypoint.x;
+    img.style.bottom = waypoint.y;
 
   }
 
   function onMoveEvent(e, orders) {
-    if (orders[player.name][waypoint] && _actionsLeft > 0) {
-      _actionsLeft--;
+    if (orders[player.name][waypoint] && actionsLeft > 0) {
+      actionsLeft--;
     }
   }
 
-  function onEndTurnEvent(e) { _actionsLeft = 2; }
+  function onEndTurnEvent(e) { actionsLeft = 2; }
 
   function onQueryArmies(e, query) {
 
@@ -101,9 +101,9 @@ function Army(emitter, mapElement, commandingPlayer, startWaypoint) {
 
 
   //Add events
-  _god.on('moveEvent',    (e, orders) => { onMoveEvent   (orders); });
-  _god.on('endTurnEvent', (e)         => { onEndTurnEvent();       });
-  _god.on('queryArmies',  (e, query)  => { onQueryArmies (e, query);  });
+  god.on('moveEvent',    (e, orders) => { onMoveEvent   (orders); });
+  god.on('endTurnEvent', (e)         => { onEndTurnEvent();       });
+  god.on('queryArmies',  (e, query)  => { onQueryArmies (e, query);  });
 
   let thisArmy = {
     player : player,
