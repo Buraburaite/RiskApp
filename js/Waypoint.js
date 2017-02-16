@@ -8,6 +8,7 @@ function Waypoint(percentageArr, waypointType, waypointName = parseString(positi
 
   let armyCount = 0;
   const god = GAME.god;
+  const orders = GAME.orders;
   const mapEl = GAME.map;
   const mapX  = () => mapEl.width();
   const mapY  = () => mapEl.height();
@@ -29,44 +30,39 @@ function Waypoint(percentageArr, waypointType, waypointName = parseString(positi
   }
 
   function onStartGame() {
-    domEl.click(() => {
 
-      god.trigger('start');
-    });
+    GAME.startTurn();
   }
 
-  function onStart() {
-    domEl.click(() => {
-      let orders = {};
+  function onStartTurn() {
+    let orders = GAME.orders;
 
-      god.trigger('move', orders);
-    });
+    GAME.movePhase();
   }
 
-  function onMove() {
-    domEl.click(() => {
-      if (currentPlayer.name === residingPlayer.name) {
-        console.log('yes, it\'s your turn');
-      }
-    });
+  function onMovePhase() {
+    if (currentPlayer.name === residingPlayer.name) {
+      console.log('yes, it\'s your turn');
+    }
+
+    GAME.combatPhase();
   }
 
-  function onCombat() {
-    domEl.click(() => {
+  function onCombatPhase() {
 
-      god.trigger('end');
-    });
+    GAME.endTurn();
   }
 
-  function onEnd() {
-    domEl.click(() => {
+  function onEndTurn() {
 
-      god.trigger('endGame');
-    });
+    //check win condition
+    GAME.endGame();
+
+    //Otherwise
+    GAME.startTurn();
   }
 
   function onEndGame() {
-    domEl.click(() => {});
   }
 
   function onWorldUpdate(e, query) {
@@ -75,12 +71,12 @@ function Waypoint(percentageArr, waypointType, waypointName = parseString(positi
   }
 
 
-  god.on('startGame',   (e) => { domEl.off('click'); onStartGame(); });
-  god.on('start',       (e) => { domEl.off('click'); onStart();     });
-  god.on('move',        (e) => { domEl.off('click'); onMove();      });
-  god.on('combat',      (e) => { domEl.off('click'); onCombat();    });
-  god.on('end',         (e) => { domEl.off('click'); onEnd();       });
-  god.on('endGame',     (e) => { domEl.off('click'); onEndGame();   });
+  god.on('startGame',   (e) => { domEl.off('click'); domEl.click(onStartGame);   });
+  god.on('startTurn',   (e) => { domEl.off('click'); domEl.click(onStartTurn);   });
+  god.on('movePhase',   (e) => { domEl.off('click'); domEl.click(onMovePhase);   });
+  god.on('combatPhase', (e) => { domEl.off('click'); domEl.click(onCombatPhase); });
+  god.on('endTurn',     (e) => { domEl.off('click'); domEl.click(onEndTurn);     });
+  god.on('endGame',     (e) => { domEl.off('click'); domEl.click(onEndGame);     });
   god.on('worldUpdate', (e, query) => { onWorldUpdate(e, query); });
 
   return {

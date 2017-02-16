@@ -7,9 +7,15 @@ function Game(mapImgPath) {
     queryArmies : null,
     map : $('.map'),
     moveArmies: null,
+    orders : null,
     phase : null,
     players : [],
     startGame : null,
+    startTurn : null,
+    movePhase : null,
+    combatPhase : null,
+    endTurn : null,
+    endGame : null,
     turn : null,
     updateWorld : null,
     waypoints : null
@@ -45,7 +51,7 @@ function Game(mapImgPath) {
   ====*/
 
   function startGame() {
-    GAME.phase = 'StartGame Phase'
+    GAME.phase = 'StartGame Phase';
     god.trigger('startGame');
 
 
@@ -63,7 +69,7 @@ function Game(mapImgPath) {
 
   function startTurn() {
     GAME.phase = 'Start Phase';
-    god.trigger('start');
+    god.trigger('startTurn');
 
     // players.forEach((player) => {
     //   currentPlayer = player;
@@ -75,26 +81,33 @@ function Game(mapImgPath) {
     // });
     // currentPlayer = null;
   }
+  GAME.startTurn = startTurn;
 
   function movePhase(phaseNum) {
     GAME.phase = 'Move Phase ' + phaseNum;
-    god.trigger('move', {});
+
+    GAME.orders = Orders();
+    god.trigger('movePhase');
   }
+  GAME.movePhase = movePhase;
 
   function combatPhase(phaseNum) {
     GAME.phase = 'Combat Phase ' + phaseNum;
-    god.trigger('combat');
+    god.trigger('combatPhase');
   }
+  GAME.combatPhase = combatPhase;
 
   function endTurn() {
     GAME.phase = 'End Phase';
-    god.trigger('end');
+    god.trigger('endTurn');
   }
+  GAME.endTurn = endTurn;
 
   function endGame() {
     GAME.phase = 'EndGame Phase';
     god.trigger('endGame');
   }
+  GAME.endGame = endGame;
 
   function addArmy(player, waypoint) {
     Army(player, waypoint);
@@ -155,12 +168,12 @@ function Game(mapImgPath) {
     }
   }
 
-  god.on('startGame', (e) => { console.log('The Game of Thrones has begun'); });
-  god.on('start',     (e) => { GAME.turn++; console.log('Turn ' + GAME.turn + ' has begun'); });
-  god.on('move',      (e) => { console.log('Armies are on the move...'); });
-  god.on('combat',    (e) => { console.log('Tension is in the air...'); });
-  god.on('end',       (e) => { console.log('Turn ' + GAME.turn + ' has ended'); });
-  god.on('endGame',   (e) => { console.log('The Game of Thrones has ended'); });
+  god.on('startGame',   (e) => { console.log('The Game of Thrones has begun'); });
+  god.on('startTurn',   (e) => { GAME.turn++; console.log('Turn ' + GAME.turn + ' has begun'); });
+  god.on('movePhase',   (e) => { console.log('Armies are on the move...'); });
+  god.on('combatPhase', (e) => { console.log('Tension is in the air...'); });
+  god.on('endTurn',     (e) => { console.log('Turn ' + GAME.turn + ' has ended'); });
+  god.on('endGame',     (e) => { console.log('The Game of Thrones has ended'); });
 
   return GAME;
 }

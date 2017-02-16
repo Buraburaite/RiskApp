@@ -84,13 +84,13 @@ function Army(commandingPlayer, startWaypoint) {
 
   }
 
-  function onMove(e, orders) {
-    if (orders[player.name][waypoint] && actionsLeft > 0) {
+  function onMovePhase(e) {
+    if (GAME.orders[player.name][waypoint] && actionsLeft > 0) {
       actionsLeft--;
     }
   }
 
-  function onEnd(e) { actionsLeft = 2; }
+  function onEndTurn(e) { actionsLeft = 2; }
 
   function onQueryArmies(e, query) {
 
@@ -102,8 +102,8 @@ function Army(commandingPlayer, startWaypoint) {
 
 
   //Add events
-  god.on('move',   (e, orders) => { onMove(e, orders); });
-  god.on('end',    (e)         => { onEnd (e);         });
+  god.on('movePhase',   (e)         => { onMovePhase(e); });
+  god.on('endTurn',     (e)         => { onEndTurn  (e); });
   god.on('queryArmies', (e, query)  => { onQueryArmies (e, query);  });
 
   let thisArmy = {
