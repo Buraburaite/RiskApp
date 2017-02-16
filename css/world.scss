@@ -46,13 +46,14 @@
     }
 
     .neutral {
+      color: black;
       background-color: white;
       @include waypointBorder(2px, solid, black);
     }
 
     .conflict {
-      color: white;
-      background-color: black;
+      color: black;
+      background-color: orange;
       @include waypointBorder(2px, solid, red);
     }
 
@@ -63,6 +64,7 @@
     }
 
     .baratheon {
+      color: black;
       background-color: yellow;
       @include waypointBorder(4px, solid, black);
     }
