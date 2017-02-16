@@ -50,6 +50,12 @@
       @include waypointBorder(2px, solid, black);
     }
 
+    .conflict {
+      color: white;
+      background-color: black;
+      @include waypointBorder(2px, solid, red);
+    }
+
     .targaeryn {
       color: white;
       background-color: red;

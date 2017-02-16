@@ -24,22 +24,69 @@ function Waypoint(percentageArr, waypointType, waypointName = parseString(positi
   .css('bottom', calcY() + 'px');
   mapEl.append(domEl);
 
-  domEl.click(() => {
-    if (currentPlayer.name === residingPlayer.name) {
-      console.log('yes, it\'s your turn');
-    }
-  });
+  function getArmies() {
+    return GAME.latestArmyQuery[name];
+  }
+
+  function onStartGame() {
+    domEl.click(() => {
+
+      god.trigger('start');
+    });
+  }
+
+  function onStart() {
+    domEl.click(() => {
+      let orders = {};
+
+      god.trigger('move', orders);
+    });
+  }
+
+  function onMove() {
+    domEl.click(() => {
+      if (currentPlayer.name === residingPlayer.name) {
+        console.log('yes, it\'s your turn');
+      }
+    });
+  }
+
+  function onCombat() {
+    domEl.click(() => {
+
+      god.trigger('end');
+    });
+  }
+
+  function onEnd() {
+    domEl.click(() => {
+
+      god.trigger('endGame');
+    });
+  }
+
+  function onEndGame() {
+    domEl.click(() => {});
+  }
 
   function onWorldUpdate(e, query) {
     armyCount = query[name].length;
     domEl.html(armyCount);
   }
 
+
+  god.on('startGame',   (e) => { domEl.off('click'); onStartGame(); });
+  god.on('start',       (e) => { domEl.off('click'); onStart();     });
+  god.on('move',        (e) => { domEl.off('click'); onMove();      });
+  god.on('combat',      (e) => { domEl.off('click'); onCombat();    });
+  god.on('end',         (e) => { domEl.off('click'); onEnd();       });
+  god.on('endGame',     (e) => { domEl.off('click'); onEndGame();   });
   god.on('worldUpdate', (e, query) => { onWorldUpdate(e, query); });
 
   return {
     percentageArr : percentageArr,
     domEl : domEl,
+    getArmies : getArmies,
     type : type,
     name :name,
 

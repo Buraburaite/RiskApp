@@ -9,7 +9,7 @@ function Game(mapImgPath) {
     moveArmies: null,
     phase : null,
     players : [],
-    start : null,
+    startGame : null,
     turn : null,
     updateWorld : null,
     waypoints : null
@@ -44,11 +44,12 @@ function Game(mapImgPath) {
   end - send victory/defeat message
   ====*/
 
-  function start() {
-    logPhases();
+  function startGame() {
+    GAME.phase = 'StartGame Phase'
+    god.trigger('startGame');
 
 
-    turn = 0;
+    GAME.turn = 0;
     // promptForPlayers();
     players.push(Player('Javi', 1, 'Targaeryn'));
     players.push(Player('Durkee', 2, 'Baratheon'));
@@ -56,14 +57,13 @@ function Game(mapImgPath) {
     addArmy(players[0], waypoints[0]);
     addArmy(players[1], waypoints[3]);
 
-    god.trigger('startEvent'); //doesn't currently do anything
     startTurn();
   }
-  GAME.start = start;
+  GAME.startGame = startGame;
 
   function startTurn() {
-    turn++;
-    god.trigger('startTurnEvent');
+    GAME.phase = 'Start Phase';
+    god.trigger('start');
 
     // players.forEach((player) => {
     //   currentPlayer = player;
@@ -74,32 +74,26 @@ function Game(mapImgPath) {
     //   }
     // });
     // currentPlayer = null;
-
-    movePhase(1);
   }
 
   function movePhase(phaseNum) {
-    god.trigger('movePhaseEvent', {});
-
-    combatPhase(phaseNum);
+    GAME.phase = 'Move Phase ' + phaseNum;
+    god.trigger('move', {});
   }
 
   function combatPhase(phaseNum) {
-    god.trigger('combatPhaseEvent');
-
-    if (phaseNum++ < 3) { movePhase(phaseNum); }
-    else                { endTurn  (); }
+    GAME.phase = 'Combat Phase ' + phaseNum;
+    god.trigger('combat');
   }
 
   function endTurn() {
-    god.trigger('endTurnEvent');
-
-    // startTurn();
+    GAME.phase = 'End Phase';
+    god.trigger('end');
   }
 
-  function end() {
-    god.trigger('endEvent');
-
+  function endGame() {
+    GAME.phase = 'EndGame Phase';
+    god.trigger('endGame');
   }
 
   function addArmy(player, waypoint) {
@@ -118,7 +112,7 @@ function Game(mapImgPath) {
       });
     });
     god.trigger('queryArmies', query);
-    latestArmyQuery = query;
+    GAME.latestArmyQuery = query;
 
     return query;
   }
@@ -135,15 +129,6 @@ function Game(mapImgPath) {
 
   function updateWorld() { god.trigger('worldUpdate', queryArmies()); }
   GAME.updateWorld = updateWorld;
-
-  function logPhases() {
-    god.on('startEvent',     (e) => { console.log('The Game of Thrones has begun'); });
-    god.on('startTurnEvent', (e) => { console.log('Turn ' + turn + ' has begun'); });
-    god.on('moveEvent',      (e) => { console.log('Armies are on the move...'); });
-    god.on('combattEvent',   (e) => { console.log('Tension is in the air...'); });
-    god.on('endTurnEvent',   (e) => { console.log('Turn ' + turn + ' has ended'); });
-    god.on('endEvent',       (e) => { console.log('The Game of Thrones has ended'); });
-  }
 
   //Gather Player data, and create Player objects
   function promptForPlayers() {
@@ -169,6 +154,13 @@ function Game(mapImgPath) {
       players.push(Player(name, i, house));
     }
   }
+
+  god.on('startGame', (e) => { console.log('The Game of Thrones has begun'); });
+  god.on('start',     (e) => { GAME.turn++; console.log('Turn ' + GAME.turn + ' has begun'); });
+  god.on('move',      (e) => { console.log('Armies are on the move...'); });
+  god.on('combat',    (e) => { console.log('Tension is in the air...'); });
+  god.on('end',       (e) => { console.log('Turn ' + GAME.turn + ' has ended'); });
+  god.on('endGame',   (e) => { console.log('The Game of Thrones has ended'); });
 
   return GAME;
 }

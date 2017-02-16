@@ -9,5 +9,5 @@ testBtn.click(() => {
 
 
 $(document).ready(() => {
-  GAME.start();
+  GAME.startGame();
 });

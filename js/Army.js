@@ -78,18 +78,19 @@ function Army(commandingPlayer, startWaypoint) {
     newWaypoint.banner = player.house.toLowerCase();
 
     waypoint = newWaypoint;
-    img.style.left = waypoint.x;
+    // img.style.left = waypoint.x;
+    img.style.left = +waypoint.x.replace('px','') + 50 + 'px';
     img.style.bottom = waypoint.y;
 
   }
 
-  function onMoveEvent(e, orders) {
+  function onMove(e, orders) {
     if (orders[player.name][waypoint] && actionsLeft > 0) {
       actionsLeft--;
     }
   }
 
-  function onEndTurnEvent(e) { actionsLeft = 2; }
+  function onEnd(e) { actionsLeft = 2; }
 
   function onQueryArmies(e, query) {
 
@@ -101,9 +102,9 @@ function Army(commandingPlayer, startWaypoint) {
 
 
   //Add events
-  god.on('moveEvent',    (e, orders) => { onMoveEvent   (orders); });
-  god.on('endTurnEvent', (e)         => { onEndTurnEvent();       });
-  god.on('queryArmies',  (e, query)  => { onQueryArmies (e, query);  });
+  god.on('move',   (e, orders) => { onMove(e, orders); });
+  god.on('end',    (e)         => { onEnd (e);         });
+  god.on('queryArmies', (e, query)  => { onQueryArmies (e, query);  });
 
   let thisArmy = {
     player : player,
