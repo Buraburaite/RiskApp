@@ -21,8 +21,6 @@ function Game(mapImgPath) {
     waypoints : []
   };
 
-  //Could do some destructuring here, but whatever
-
   /*====
   It is only okay to create shortened references
   for these four parts of GAME, anywhere in the program
