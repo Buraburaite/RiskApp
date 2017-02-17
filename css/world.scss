@@ -24,9 +24,12 @@
   margin: auto;
 
   .map {
+    background-image: url("../Assets/map.jpg");
+    background-size: contain;
     height: inherit;
     width: inherit;
     @include mapBorder();
+    border: 1px solid black;
 
     .army {
       position: absolute;
@@ -38,6 +41,7 @@
       width: 30px;
       height: 30px;
       position: absolute;
+      z-index: 1;
       left: 0px;
       bottom: 0px;
       text-align: center;

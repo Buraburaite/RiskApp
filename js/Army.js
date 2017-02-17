@@ -65,7 +65,7 @@ function Army(commandingPlayer, startWaypoint) {
 
 
   //Create army image
-  img.src = '../IgnoreThis/Assets/Images/Mons/' + _.sample(mons) + '.png';
+  img.src = 'Assets/Mons/' + _.sample(mons) + '.png';
   img.width = 100;
   img.height = 60;
   img.className = 'army';

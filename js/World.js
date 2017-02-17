@@ -1,4 +1,4 @@
-function World(mapBackgroundPath) {
+function World() {
 
   const god       = GAME.god;
   const map       = GAME.map;
@@ -11,12 +11,12 @@ function World(mapBackgroundPath) {
   // waypoints.push(Waypoint([100,175], $('#Samsara'), 'Landmark', 'Samsara'));
   // waypoints.push(Waypoint([100,325], $('#Nirvana'), 'Landmark', 'Nirvana'));
 
-  addWaypoint(50, 80, 'Landmark', 'Tengoku');
-  addWaypoint(80, 65, 'Landmark', 'Eudaimonia');
-  addWaypoint(80, 35, 'Landmark', 'Circumstancia');
-  addWaypoint(50, 20, 'Landmark', 'Oblivion');
+  addWaypoint(50, 50, 'Landmark', 'Tengoku');
+  addWaypoint(80, 60, 'Landmark', 'Eudaimonia');
+  addWaypoint(70, 35, 'Landmark', 'Circumstancia');
+  addWaypoint(57, 20, 'Landmark', 'Oblivion');
   addWaypoint(20, 35, 'Landmark', 'Samsara');
-  addWaypoint(20, 65, 'Landmark', 'Nirvana');
+  addWaypoint(21, 81, 'Landmark', 'Nirvana');
 
   function addWaypoint(xPercentage, yPercentage, type, name) {
     waypoints.push(Waypoint([xPercentage,yPercentage], type, name));

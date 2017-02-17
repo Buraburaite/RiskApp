@@ -1,4 +1,4 @@
-function Game(mapImgPath) {
+function Game() {
 
   GAME = { //Public variables
     currentPlayer : null,
@@ -23,7 +23,7 @@ function Game(mapImgPath) {
   const god = GAME.god;
   const map = GAME.map;
   const players = GAME.players;
-  const world = World(mapImgPath);
+  const world = World();
   const waypoints = GAME.waypoints;
 
   function startGame() {
@@ -31,8 +31,8 @@ function Game(mapImgPath) {
 
     GAME.turn = 0;
     // promptForPlayers();
-    players.push(Player('Javi', 1, 'Targaeryn'));
-    players.push(Player('Durkee', 2, 'Baratheon'));
+    players.push(Player('Durkee', 1, 'Baratheon'));
+    players.push(Player('Javi', 2, 'Targaeryn'));
 
     addArmy(players[0], waypoints[0]);
     addArmy(players[1], waypoints[3]);
