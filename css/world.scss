@@ -37,6 +37,72 @@ body {
     height: inherit;
   }
 
+  .army {
+    position: absolute;
+    left: 0px;
+    bottom: 0px;
+  }
+
+  .waypoint {
+    width: 30px;
+    height: 30px;
+    position: absolute;
+    z-index: 1;
+    left: 0%;
+    bottom: 0%;
+    text-align: center;
+    font-weight: bold;
+
+    &:hover + .myTooltip {
+      opacity: 1;
+      visibility: visible;
+      transition: opacity 1s, visibility 1s;
+    }
+
+  }
+
+  .myTooltip {
+    width: auto;
+    height: auto;
+    padding: 4px;
+    position: absolute;
+    z-index: 3;
+    left: 0%;
+    bottom: 0%;
+    text-align: center;
+    font-weight: bold;
+    @include mapBorder();
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 2s, visibility 1s;
+    transition-delay: 0.1s;
+
+  }
+
+  .neutral {
+    color: black;
+    background-color: white;
+    @include waypointBorder(2px, solid, black);
+  }
+
+  .conflict {
+    color: black;
+    background-color: orange;
+    @include waypointBorder(2px, solid, red);
+  }
+
+  .targaryen {
+    color: white;
+    background-color: red;
+    @include waypointBorder(4px, solid, black);
+  }
+
+  .baratheon {
+    color: black;
+    background-color: yellow;
+    @include waypointBorder(4px, solid, black);
+  }
+
   .win-div {
     display: none;
     width: 30%;
@@ -76,49 +142,10 @@ body {
     .win-banner {
       width: 100%;
       height: auto;
+      position: relative;
+      z-index: 10;
+      bottom: 6px;
 
     }
-  }
-
-  .army {
-    position: absolute;
-    left: 0px;
-    bottom: 0px;
-  }
-
-  .waypoint {
-    width: 30px;
-    height: 30px;
-    position: absolute;
-    z-index: 1;
-    left: 0%;
-    bottom: 0%;
-    text-align: center;
-    font-weight: bold;
-
-  }
-
-  .neutral {
-    color: black;
-    background-color: white;
-    @include waypointBorder(2px, solid, black);
-  }
-
-  .conflict {
-    color: black;
-    background-color: orange;
-    @include waypointBorder(2px, solid, red);
-  }
-
-  .targaeryn {
-    color: white;
-    background-color: red;
-    @include waypointBorder(4px, solid, black);
-  }
-
-  .baratheon {
-    color: black;
-    background-color: yellow;
-    @include waypointBorder(4px, solid, black);
   }
 }
