@@ -6,7 +6,7 @@ function loadSounds () {
   ion.sound({
     sounds: [{name: "ambience"}, {name: 'tap'}],
 
-    path: "./js/sounds/",
+    path: "./lib/ion.sound-3.0.7/sounds/",
     preload: true,
     volume: 0.1
   });
