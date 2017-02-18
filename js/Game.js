@@ -1,17 +1,22 @@
-function Game() {
+function Game(mapImgPath) {
 
   GAME = { //Public variables
-    placeArmies : null,
     currentPlayer : null,
-    fight : null,
     god : $({}),
     latestArmyQuery : null,
     queryArmies : null,
-    map : $('.map-container'),
-    marchArmies: null,
+    map : $('.map'),
+    moveArmies: null,
     orders : null,
-    placeOrders: placeOrders,
+    phase : null,
     players : [],
+    prevClick : null,
+    startGame : null,
+    startTurn : null,
+    movePhase : null,
+    combatPhase : null,
+    endTurn : null,
+    endGame : null,
     turn : null,
     updateWorld : null,
     waypoints : []
@@ -25,120 +30,83 @@ function Game() {
   const god = GAME.god;
   const map = GAME.map;
   const players = GAME.players;
-  const world = World();
+  const world = World(mapImgPath);
   const waypoints = GAME.waypoints;
 
-  function placeOrders(orders) {
 
-    let sections = orders.split(',');
-    sections = sections.map((sec) => sec.trim() );
+  // let checkIfReady = () => {
+  //   if (ready) {
+  //     clearInterval(readyChecker);
+  //   }
+  // };
 
-    let origin, destination, battlefield, success = false;
 
-    //Placement
-    if (sections[0] === 'Place') {
-      if (sections[1]) {
-        destination = waypoints.find((wp) => wp.name === sections[1]);
-        if (destination) {
-          success = true;
-          placeArmies(GAME.currentPlayer.name, destination.name);
-        }
-      }
-    }
-    //Marching
-    if (sections[0] === 'March') {
-      if (sections[1] && sections[2]) {
-        origin      = waypoints.find((wp) => wp.name === sections[1]);
-        destination = waypoints.find((wp) => wp.name === sections[2]);
-        if (origin && destination) {
-          success = true;
-          marchArmies(origin.name, destination.name);
-        }
-      }
-    }
-    //Fight
-    if (sections[0] === 'Fight') {
-      if (sections[1]) {
-        battlefield = waypoints.find((wp) => wp.name === sections[1]);
-        if (battlefield) {
-          success = true;
-          fight(battlefield.name);
-        }
-      }
-    }
 
-    // let player      = players.find(  (p)  => p.name  === playerName);
-    // let destination = waypoints.find((wp) => wp.name === destinationName);
-    console.log(sections);
-
-    return success;
-  }
+  /*====PHASES
+  start - gather player info
+  startTurn - Increment turn count, gather orders
+  movePhase - up to 1 move action
+  combatPhase - up to 1 combat action
+  movePhase - up to 1 move action
+  combatPhase - up to 1 combat action
+  endTurn - reset Army.actionsLeft (think of it like night time)
+  end - send victory/defeat message
+  ====*/
 
   function startGame() {
+    GAME.phase = 'StartGame Phase';
+    god.trigger('startGame');
 
 
     GAME.turn = 0;
     // promptForPlayers();
-    players.push(Player('Durkee', 1, 'Baratheon'));
-    players.push(Player('Javi', 2, 'Targaryen'));
-    GAME.currentPlayer = players[1];
+    players.push(Player('Javi', 1, 'Targaeryn'));
+    players.push(Player('Durkee', 2, 'Baratheon'));
 
-    placeArmies('Durkee', 'King\'s Landing');
-    placeArmies('Javi', 'Valyria');
+    addArmy(players[0], waypoints[0]);
+    addArmy(players[1], waypoints[3]);
 
+    startTurn();
   }
   GAME.startGame = startGame;
 
-  function placeArmies(playerName, destinationName, num = 1) {
-    let player      = players.find(  (p)  => p.name  === playerName);
-    let destination = waypoints.find((wp) => wp.name === destinationName);
-    _.times(num, Army(player, destination));
+  function startTurn() {
+    GAME.phase = 'Start Phase';
+    god.trigger('startTurn');
+  }
+  GAME.startTurn = startTurn;
+
+  function movePhase(phaseNum) {
+    GAME.phase = 'Move Phase ' + phaseNum;
+
+    GAME.orders = Orders();
+    GAME.currentPlayer = players[0];
+    god.trigger('movePhase');
+  }
+  GAME.movePhase = movePhase;
+
+  function combatPhase(phaseNum) {
+    GAME.phase = 'Combat Phase ' + phaseNum;
+    god.trigger('combatPhase');
+  }
+  GAME.combatPhase = combatPhase;
+
+  function endTurn() {
+    GAME.phase = 'End Phase';
+    god.trigger('endTurn');
+  }
+  GAME.endTurn = endTurn;
+
+  function endGame() {
+    GAME.phase = 'EndGame Phase';
+    god.trigger('endGame');
+  }
+  GAME.endGame = endGame;
+
+  function addArmy(player, waypoint) {
+    Army(player, waypoint);
     updateWorld();
   }
-  GAME.placeArmies = placeArmies;
-
-  function fight(battlefieldName) {
-    let query = queryArmies();
-    let armies = query[battlefieldName];
-
-    commanders = [];
-    armies.forEach((army) => {
-      if (!commanders.includes(army.player)) { commanders.push(army.player); }
-    });
-
-    let victor = _.sample(commanders);
-
-    //Specify winner in message
-    $('#bottom-win-msg')
-    .html('House ' + victor.house + '!');
-    $('.win-banner')
-    .attr('src', 'Assets/Factions/House ' + victor.house + '.png');
-
-    //Animate the banner
-    let winBanner = $('.win-div');
-
-    winBanner
-    .css('display', 'block')
-    .css('opacity', '0');
-
-    let counter = 0;
-    let accel   = 0;
-    let increaseOpacity = () => {
-      if (counter < 1) {
-        accel   += 0.01;
-        if (accel > 0.8) {
-          accel = 0.8;
-        }
-        counter += accel;
-        winBanner.css('opacity', counter.toString());
-      }
-      else {
-        clearInterval(interval);
-      }
-    };
-    let interval = setInterval(increaseOpacity, 100);
-  }
-  GAME.fight = fight;
 
   function queryArmies() {
     let query = {};
@@ -157,21 +125,49 @@ function Game() {
   }
   GAME.queryArmies = queryArmies;
 
-  function marchArmies(originName, destinationName) {
-    let player = players[0];
-    let origin = waypoints.find((wp) => wp.name === originName);
-    let destination = waypoints.find((wp) => wp.name === destinationName);
-
+  function moveArmies(originNum, targetNum) {
+    player = players[0];
+    origin = waypoints[originNum];
     let query = queryArmies(player, origin);
-    query[origin.name].forEach((army) => {
-      army.moveTo(destination);
-    });
+    query[waypoints[originNum].name].forEach((army) => { army.moveTo(waypoints[targetNum]); });
     updateWorld();
   }
-  GAME.marchArmies = marchArmies;
+  GAME.moveArmies = moveArmies;
 
   function updateWorld() { god.trigger('worldUpdate', queryArmies()); }
   GAME.updateWorld = updateWorld;
+
+  //Gather Player data, and create Player objects
+  function promptForPlayers() {
+
+    let names = ['armies'], houses = ['armies']; //'armies' is a reserved name
+    let waypointNames = waypoints.map((wp) => wp.name);
+
+    let input = prompt('How many players?');
+    for (let i = 1; i < +input + 1; i++) {
+
+      input = prompt('Name of Player ' + i + '?');
+      while (names.includes(input) || waypointNames.includes(input)) {
+        name = prompt('Name already taken, please enter a new name...');
+      }
+      names.push(input);
+
+      input = prompt('What is the name of your house?');
+      while (houses.includes(input) || waypointNames.includes(input)) {
+        house = prompt('Name already taken, please enter a new name...');
+      }
+      houses.push(input);
+
+      players.push(Player(name, i, house));
+    }
+  }
+
+  god.on('startGame',   (e) => { console.log('The Game of Thrones has begun'); });
+  god.on('startTurn',   (e) => { GAME.turn++; console.log('Turn ' + GAME.turn + ' has begun'); });
+  god.on('movePhase',   (e) => { console.log('Armies are on the move...'); });
+  god.on('combatPhase', (e) => { console.log('Tension is in the air...'); });
+  god.on('endTurn',     (e) => { console.log('Turn ' + GAME.turn + ' has ended'); });
+  god.on('endGame',     (e) => { console.log('The Game of Thrones has ended'); });
 
   return GAME;
 }
