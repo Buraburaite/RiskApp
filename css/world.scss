@@ -1,70 +1,185 @@
 @mixin mapBorder() {
-  -webkit-border: 1px solid ;
-  -moz-border: 1px solid black;
-  -ms-border: 1px solid black;
-  border: px solid black;
+  -webkit-border: 4px solid black;
+  -moz-border: 4px solid black;
+  -ms-border: 4px solid black;
+  border: 4px solid red;
+  -webkit-border-radius: 6px;
+  -moz-border-radius: 6px;
+  -ms-border-radius: 6px;
+  border-radius: 6px;
 }
-@mixin waypointBorder($px, $style, $color) {
+@mixin border($px, $style, $color) {
   -webkit-border: $px $style $color;
   -moz-border: $px $style $color;
   -ms-border:$px $style $color;
   border: $px $style $color;
 }
-
-#navbar-spacing {
+@mixin roundBorder($px, $style, $color, $radius) {
+  -webkit-border: $px $style $color;
+  -moz-border: $px $style $color;
+  -ms-border:$px $style $color;
+  border: $px $style $color;
+  -webkit-border-radius: $radius;
+  -moz-border-radius: $radius;
+  -ms-border-radius: $radius;
+  border-radius: $radius;
+}
+body {
   width: 100%;
-  height: 30px;
+  height: 620px;
+  background-image: url('../Assets/background.jpg');
+  background-size: cover;
 }
 .map-container {
-  width: 1000px;
+  width: 900px;
   height: 600px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin: auto;
+
+  position: absolute;
+  top: 47%;
+  left: 50%;
+
+  margin: -300px 0 0 -450px;
+  box-sizing: content-box;
+  @include mapBorder();
 
   .map {
-    height: inherit;
     width: inherit;
+    height: inherit;
+  }
+
+  .army {
+    position: absolute;
+    left: 0px;
+    bottom: 0px;
+  }
+
+  .waypoint {
+    width: 30px;
+    height: 30px;
+    position: absolute;
+    z-index: 1;
+    left: 0%;
+    bottom: 0%;
+    text-align: center;
+    font-weight: bold;
+
+    &:hover + .myTooltip {
+      opacity: 1;
+      visibility: visible;
+      transition: opacity 1s, visibility 1s;
+    }
+
+  }
+
+  .myTooltip {
+    width: auto;
+    height: auto;
+    padding: 4px;
+    position: absolute;
+    z-index: 3;
+    left: 0%;
+    bottom: 0%;
+    text-align: center;
+    font-weight: bold;
     @include mapBorder();
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 2s, visibility 1s;
+    transition-delay: 0.1s;
 
-    .army {
-      position: absolute;
-      left: 0px;
-      bottom: 0px;
-    }
+  }
 
-    .waypoint {
-      width: 30px;
-      height: 30px;
-      position: absolute;
-      left: 0px;
-      bottom: 0px;
+  .neutral {
+    color: black;
+    background-color: white;
+    @include border(2px, solid, black);
+  }
+
+  .conflict {
+    color: black;
+    background-color: orange;
+    @include border(2px, solid, red);
+  }
+
+  .targaryen {
+    color: white;
+    background-color: red;
+    @include border(4px, solid, black);
+  }
+
+  .baratheon {
+    color: black;
+    background-color: yellow;
+    @include border(4px, solid, black);
+  }
+
+  .win-div {
+    display: none;
+    width: 30%;
+    height: auto;
+    position: absolute;
+    z-index: 10;
+    top: 50%;
+    left: 50%;
+    padding: 10px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border: 0px solid black;
+    border-radius: 10px;
+    background: rgba(250,250,250,0.5);
+
+    .win-msg {
+      background: black;
+      color: white;
+      font: arial;
       text-align: center;
-      font-weight: bold;
+      font-family: copperplate;
+      border: 1px solid black;
+      border-radius: 4px;
+
+    }
+    #top-win-msg {
+      font-size: 2.2vw;
 
     }
 
-    .neutral {
-      background-color: white;
-      @include waypointBorder(2px, solid, black);
+    #bottom-win-msg {
+      font-size: 4vw;
+
     }
 
-    .conflict {
-      color: white;
-      background-color: black;
-      @include waypointBorder(2px, solid, red);
-    }
+    .win-banner {
+      width: 100%;
+      height: auto;
+      position: relative;
+      z-index: 10;
+      bottom: 6px;
 
-    .targaeryn {
-      color: white;
-      background-color: red;
-      @include waypointBorder(4px, solid, black);
-    }
-
-    .baratheon {
-      background-color: yellow;
-      @include waypointBorder(4px, solid, black);
     }
   }
+}
+.input-box {
+  width: 85%;
+  height: 30px;
+  background: white;
+  position: absolute;
+  top: 101%;
+  z-index: 100;
+  text-align: center;
+  outline: none;
+}
+.input-btn {
+  width: auto;
+  height: 4%;
+  position: absolute;
+  top: 101.5%;
+  left: 87%;
+  color: white;
+  background-color: green;
+  background-repeat: no-repeat;
+  @include roundBorder(1px, solid, black, 2px);
+  cursor: pointer;
+  outline: none;
+  overflow: hidden;
 }
