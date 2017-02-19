@@ -1,17 +1,18 @@
-function Waypoint(percentageArr, waypointType, waypointName = parseString(positionArr)) {
+function Waypoint(game, percentageArr, waypointName = '...', waypointType = "landmark") {
 
   const percentPosition = percentageArr;
+  const id = parseString(positionArr);
+  const god = game.god;
+  const mapEl = game.mapEl;
+  const players = game.players;
   let type = waypointType;
   let name = waypointName;
   let residingPlayer = null;
-  let banner = 'Neutral';
+  let armyCount = 0;
   // let armies; eventually, we want a variable like to auto-refresh
 
-  let armyCount = 0;
-  const god = GAME.god;
-  const mapEl = GAME.map;
-  const players = GAME.players;
 
+  //Create waypoint element, appending to map
   let domEl = $('<span/>')
   .addClass('waypoint')
   .addClass('neutral')
@@ -21,6 +22,7 @@ function Waypoint(percentageArr, waypointType, waypointName = parseString(positi
   .css('bottom', percentPosition[1] + '%');
   mapEl.append(domEl);
 
+  //Create tooltip, appending to map
   let tooltip = $('<span/>')
   .addClass('myTooltip')
   .addClass('neutral')
@@ -30,10 +32,6 @@ function Waypoint(percentageArr, waypointType, waypointName = parseString(positi
   .css('bottom', percentPosition[1] + 8 + '%');
   mapEl.append(tooltip);
 
-  function getArmies() { //not really good enough, could get out of sync
-    return GAME.latestArmyQuery[name];
-  }
-
   function onWorldUpdate(e, query) {
     armyCount = query[name].length;
     domEl.html(armyCount);
@@ -42,23 +40,20 @@ function Waypoint(percentageArr, waypointType, waypointName = parseString(positi
   god.on('worldUpdate', (e, query) => { onWorldUpdate(e, query); });
 
   let thisWaypoint =  {
-    percentageArr : percentageArr,
-    domEl : domEl,
-    getArmies : getArmies,
-    type : type,
     name :name,
+    percentageArr : percentageArr,
+    residingPlayer : residingPlayer,
+    type : type,
 
-    get x() { return domEl.css('left');   },
-    get y() { return domEl.css('bottom'); },
+    get armyCount() { return armyCount; },
 
-    get armyCount()         { return armyCount; },
-    set armyCount(newCount) { armyCount = newCount; domEl.html(armyCount); },
+    get id() { return id; },
 
-    get residingPlayer()          { return residingPlayer; },
-    set residingPlayer(newPlayer) { residingPlayer = newPlayer; },
+    get x()  { return domEl.css('left');   },
+    get y()  { return domEl.css('bottom'); },
 
-    get banner() { return banner;   },
-    set banner(newBanner) {
+    get banner() { return residingPlayer.house.toLowerCase() || 'neutral';  },
+    set banner(newBanner) { //this code should be moved to world update, once Raven up and running
       domEl.removeClass(banner.toLowerCase());
       domEl.addClass(newBanner.toLowerCase());
       tooltip.removeClass(banner.toLowerCase());

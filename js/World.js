@@ -1,36 +1,30 @@
-function World() {
+function World(game) {
 
-  const god       = GAME.god;
-  const map       = GAME.map;
-  const waypoints = GAME.waypoints;
+  //Hard-coded waypoints
+  addWaypoint(12, 44, 'Lannisport');
+  addWaypoint(19, 77, 'Winterfell');
+  addWaypoint(25, 43, 'King\'s Landing');
+  addWaypoint(29, 19, 'Sunspear');
+  addWaypoint(36, 28, 'Tyrosh');
+  addWaypoint(37, 15, 'Lys');
+  addWaypoint(37, 58, 'Braavos');
+  addWaypoint(38, 41, 'Pentos');
+  addWaypoint(41, 29, 'Myr');
+  addWaypoint(43, 46, 'Norvos');
+  addWaypoint(48, 40, 'Qohor');
+  addWaypoint(49, 18, 'Volantis');
+  addWaypoint(57,  4, 'Valyria');
+  addWaypoint(72, 27, 'Mereen');
+  addWaypoint(85, 45, 'Vaes Dothrak');
+  addWaypoint(88, 10, 'Qarth');
 
-  addWaypoint(38, 41, 'Landmark', 'Pentos');
-  addWaypoint(37, 58, 'Landmark', 'Braavos');
-  addWaypoint(43, 46, 'Landmark', 'Norvos');
-  addWaypoint(48, 40, 'Landmark', 'Qohor');
-  addWaypoint(41, 29, 'Landmark', 'Myr');
-  addWaypoint(36, 28, 'Landmark', 'Tyrosh');
-  addWaypoint(37, 15, 'Landmark', 'Lys');
-  addWaypoint(49, 18, 'Landmark', 'Volantis');
-  addWaypoint(85, 45, 'Landmark', 'Vaes Dothrak');
-  addWaypoint(88, 10, 'Landmark', 'Qarth');
-  addWaypoint(72, 27, 'Landmark', 'Mereen');
-  addWaypoint(57, 4,  'Landmark', 'Valyria');
-  addWaypoint(25, 43, 'Landmark', 'King\'s Landing');
-  addWaypoint(12, 44, 'Landmark', 'Lannisport');
-  addWaypoint(29, 19, 'Landmark', 'Sunspear');
-  addWaypoint(19, 77, 'Landmark', 'Winterfell');
-
-  function addWaypoint(xPercentage, yPercentage, type, name) {
-    waypoints.push(Waypoint([xPercentage,yPercentage], type, name));
+  function addWaypoint(xPercentage, yPercentage, name, type) {
+    waypoints.push(Waypoint(game, [xPercentage, yPercentage], name, type));
   }
 
-  function updateWorld() {
-    let query = {};
-    god.trigger('queryArmies', query);
-    waypoints.forEach((wp) => { waypoint.armyCount = query[wp.name]; });
-  }
+  const thisWorld = {
+    waypoints: waypoints
+  };
 
-
-  return {};
+  return thisWorld;
 }

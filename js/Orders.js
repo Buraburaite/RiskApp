@@ -1,15 +1,18 @@
-function Orders() {
+function Orders(game) {
 
-  let orders = {};
-  GAME.players.forEach((player) => {
+  const player = game.players;
+  const waypoints = game.waypoints;
+
+  const theseOrders = {};
+  players.forEach((player) => {
     orders[player.name] = {};
 
-    GAME.waypoints.forEach((waypoint) => {
+    waypoints.forEach((waypoint) => {
       orders[player.name][waypoint.name] = null;
 
     });
   });
 
 
-  return orders;
+  return theseOrders;
 }
