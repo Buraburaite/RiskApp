@@ -1,10 +1,9 @@
 function Game() {
 
   const god = $({});
-  const players = [];
   const mapEl = $('.map-container');
   const raven = Raven();
-  const world = World();
+  const players = [];
   const waypoints = [];
 
   let turn = 0;
@@ -13,10 +12,11 @@ function Game() {
   function startGame() {
 
     turn++;
-    orders = Orders();
+    this.world = World(thisGame);
+    orders = Orders(thisGame);
 
-    players.push(Player('Javi', 1, 'Targaryen'));
-    players.push(Player('Durkee', 2, 'Baratheon'));
+    players.push(Player('Javi', 'Targaryen'));
+    players.push(Player('Durkee', 'Baratheon'));
 
   }
 
@@ -26,7 +26,10 @@ function Game() {
     if (typeof dest   === 'string') { dest   = waypoints.find((wp) => wp.name === dest);   }
 
     //Place armies
-    _.times(num, Army(player, destination));
+    dest.residingPlayer = player;
+    dest.armyCount += num;
+
+    god.trigger('worldUpdate');
   }
 
   function queryArmies() {
@@ -55,8 +58,11 @@ function Game() {
 
   const thisGame = {
     god : god,
-    map : map,
+    mapEl : mapEl,
+    players : players,
+    placeArmies : placeArmies,
     raven : raven,
+    startGame : startGame,
     waypoints : waypoints
   };
 

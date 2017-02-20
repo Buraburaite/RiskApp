@@ -1,7 +1,6 @@
 function Orders(game) {
 
-  const player = game.players;
-  const waypoints = game.waypoints;
+  const { players, waypoints } = game;
 
   const theseOrders = {};
   players.forEach((player) => {

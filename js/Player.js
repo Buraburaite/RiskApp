@@ -1,12 +1,12 @@
 function Player(playerName, playerHouse) {
 
   const name   = playerName;
-  const number = newId();
   const house  = playerHouse;
+  // const number = Player.newId();
 
   const thisPlayer = {
     name : name,
-    number : number,
+    // number : number,
     house : house
   };
 

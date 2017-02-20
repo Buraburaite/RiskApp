@@ -1,5 +1,7 @@
 function World(game) {
 
+  const { waypoints } = game;
+
   //Hard-coded waypoints
   addWaypoint(12, 44, 'Lannisport');
   addWaypoint(19, 77, 'Winterfell');
