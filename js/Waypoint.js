@@ -7,8 +7,11 @@ function Waypoint(game, positionArr, waypointName = '...', waypointType = "landm
   let type = waypointType;
   let residingPlayer = null;
   let armyCount = 0;
-  let getBanner = () => residingPlayer.house.toLowerCase() || 'neutral';
-  // let armies; eventually, we want a variable like to auto-refresh
+
+
+  function getBanner() {
+    return residingPlayer ? residingPlayer.house.toLowerCase() : 'neutral';
+  }
 
 
   //Create waypoint element, appending to map
