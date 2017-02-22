@@ -1,12 +1,12 @@
 function Player(playerName, playerHouse) {
 
   const name   = playerName;
-  const number = Player.newId();
   const house  = playerHouse;
+  const id = Player.newId();
 
   const thisPlayer = {
+    id : id,
     name : name,
-    number : number,
     house : house
   };
 
@@ -16,7 +16,7 @@ function Player(playerName, playerHouse) {
 //Statics
 Player.newId = (() => {
   let count = 0;
-  
+
   return () => {
     count = count + 1;
     return count;

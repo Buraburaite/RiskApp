@@ -28,6 +28,7 @@ function Game() {
     //Place armies
     dest.residingPlayer = player;
     dest.armyCount += num;
+    console.log(dest.armyCount);
 
     god.trigger('worldUpdate');
   }
