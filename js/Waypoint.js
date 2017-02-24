@@ -1,7 +1,7 @@
 function Waypoint(game, positionArr, waypointName = '...', waypointType = "landmark") {
 
-  //Public stuff
-  let inst =  {
+  //Public
+  const inst =  {
     armyCount      : 0,
     position       : positionArr, //positions are a whole number percentage, i.e. [50, 50] is the center
     residingPlayer : null,
@@ -17,16 +17,13 @@ function Waypoint(game, positionArr, waypointName = '...', waypointType = "landm
 
   };
 
-  //Private stuff
+  //Private
   const { god, mapEl, raven, players } = game;
   const id = inst.position.toString();
 
   let getBanner = () => {
     return inst.residingPlayer ? inst.residingPlayer.house : 'Neutral';
   };
-  // function getBanner() {
-  //   return inst.residingPlayer ? inst.residingPlayer.house : 'Neutral';
-  // }
 
   //Constructing for the inst
   //Create waypoint element, appending to map
@@ -50,7 +47,7 @@ function Waypoint(game, positionArr, waypointName = '...', waypointType = "landm
   mapEl.append(tooltip);
 
   //Event stuff
-  function onWorldUpdate(e) {
+  function onWorldUpdate(e, round) {
     let banner = getBanner();
 
     waypointEl
@@ -64,7 +61,10 @@ function Waypoint(game, positionArr, waypointName = '...', waypointType = "landm
     .addClass('myTooltip ' + banner.toLowerCase());
   }
 
-  god.on('worldUpdate', (e) => { onWorldUpdate(e); });
+  god.on('worldUpdate', (e, round) => { onWorldUpdate(e, round); });
+
+
+
 
   return inst;
 }

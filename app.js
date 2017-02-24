@@ -11,6 +11,10 @@ function loadSounds () {
   });
 }
 
+let turnBtn = $('#turnBtn').click((e) => {
+  game.round++;
+});
+
 $(document).ready(() => {
   game.startGame();
 });

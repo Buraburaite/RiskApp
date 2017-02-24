@@ -1,16 +1,18 @@
 function Player(playerName, playerHouse) {
 
-  const name   = playerName;
-  const house  = playerHouse;
-  const id = Player.newId();
-
-  const thisPlayer = {
-    id : id,
-    name : name,
-    house : house
+  //Public
+  const inst = {
+    id : null,
+    name : null,
+    house : null
   };
 
-  return thisPlayer;
+  inst.name  = playerName;
+  inst.house = playerHouse;
+  inst.id    = Player.newId();
+
+
+  return inst;
 }
 
 //Statics

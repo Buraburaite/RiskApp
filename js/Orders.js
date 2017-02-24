@@ -1,8 +1,11 @@
 function Orders(game) {
 
+  //Public
+  const inst = {};
+
+  //Private
   const { players, waypoints } = game;
 
-  const theseOrders = {};
   players.forEach((player) => {
     orders[player.name] = {};
 
@@ -12,6 +15,5 @@ function Orders(game) {
     });
   });
 
-
-  return theseOrders;
+  return inst;
 }
