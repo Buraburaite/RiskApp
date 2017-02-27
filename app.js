@@ -11,10 +11,17 @@ function loadSounds () {
   });
 }
 
-let turnBtn = $('#turnBtn').click((e) => {
-  game.round++;
+//Elements for testing
+let incrementBtn = $('#round-increment-btn').click((e) => {
+  game.newRound();
+});
+let roundBtn = $('#round-btn').click((e) => {
+  game.round = $('#round-input').val();
 });
 
+game.god.on('worldUpdate', (e, round) => {
+  incrementBtn.html('Current Turn: ' + round);
+});
 $(document).ready(() => {
   game.startGame();
 });

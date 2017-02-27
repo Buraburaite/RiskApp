@@ -7,6 +7,7 @@ function Game() {
   const inst = {
     god : $({}),
     mapEl : $('.map-container'),
+    newRound : newRound,
     players : [],
     placeArmies : placeArmies,
     raven : null,
@@ -14,14 +15,17 @@ function Game() {
     waypoints : null,
 
     get round() { return round; },
+    set round(newRound) { round = newRound; this.god.trigger('worldUpdate', round); } //for testing purposes only
   };
 
 
   function startGame() {
 
-    //Set up waypoints and raven (our model)
-    inst.waypoints = createWaypoints(inst);
+    //Set up the raven (our model)
     inst.raven = Raven(inst);
+
+    //Create our waypoints
+    inst.waypoints = createWaypoints(inst);
 
     //Start Turn 1
     newRound();
@@ -33,7 +37,7 @@ function Game() {
 
   function newRound() {
     round++;
-    inst.raven.newState(round);
+    inst.raven.newRound(round);
     inst.god.trigger('worldUpdate', round);
   }
 
@@ -46,7 +50,6 @@ function Game() {
     dest.residingPlayer = player;
     dest.armyCount += num;
 
-    inst.god.trigger('worldUpdate');
   }
 
   function queryArmies() {

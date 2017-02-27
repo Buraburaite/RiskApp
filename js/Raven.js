@@ -1,32 +1,32 @@
 function Raven(game) {
   const inst = {
-    findState : findState,
-    newState : newState,
-    states : [],
-    updateState : updateState
+    findRound : findRound,
+    newRound : newRound,
+    rounds : [null],
+    updateRound : updateRound
   };
 
-  function newState(round) {
-    if (!inst.states[round] && round > 0) {
-      inst.states.splice(round, 0, State(game, round));
+  function newRound(round) {
+    if (!inst.rounds[round] && round > 0) {
+      inst.rounds.splice(round, 0, Round(game, round));
     }
     else {
       console.log("Error: Raven.js:newState error");
     }
   }
 
-  function findState(round) {
-    return inst.states[round];
+  function findRound(round) {
+    return inst.rounds[round];
   }
 
-  function updateState(round) {
+  function updateRound(round) {
 
   }
 
   return inst;
 }
 
-function State(game, round) { //State object
+function Round(game, round) { //Round object
 
   const inst = {
     round : round,
@@ -50,7 +50,7 @@ function State(game, round) { //State object
   inst.startState = emptyState;
 
   if (round > 1) { //States are a doubly-linked list
-    inst.prevState = raven.states[round - 1];
+    inst.prevState = raven.rounds[round - 1];
     inst.prevState.nextState = inst;
   }
 
