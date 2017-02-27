@@ -1,32 +1,40 @@
 function Game() {
 
+  //Private
+  let round = 0; //Increment with newRound(), never change directly.
+
   //Public
   const inst = {
     god : $({}),
     mapEl : $('.map-container'),
     players : [],
     placeArmies : placeArmies,
-    raven : Raven(),
+    raven : null,
     startGame : startGame,
-    waypoints : [],
+    waypoints : null,
 
-    get round()         { return round; },
-    set round(newRound) { round = newRound; this.god.trigger('worldUpdate', newRound); }
+    get round() { return round; },
   };
 
-  //Private
-  let round = 0;
-  let orders;
 
   function startGame() {
 
-    inst.round++;
-    orders = Orders(inst);
-    createWaypoints(inst);
+    //Set up waypoints and raven (our model)
+    inst.waypoints = createWaypoints(inst);
+    inst.raven = Raven(inst);
+
+    //Start Turn 1
+    newRound();
 
     inst.players.push(Player('Javi', 'Targaryen'));
     inst.players.push(Player('Durkee', 'Baratheon'));
 
+  }
+
+  function newRound() {
+    round++;
+    raven.newState(round);
+    this.god.trigger('worldUpdate', round);
   }
 
   function placeArmies(player, dest, num = 1) {
