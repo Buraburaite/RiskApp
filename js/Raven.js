@@ -1,11 +1,14 @@
 function Raven(game) {
   const inst = {
-    states : []
+    findState : findState,
+    newState : newState,
+    states : [],
+    updateState : updateState
   };
 
   function newState(round) {
-    if (!states[round] && round > 0) {
-      states.splice(round, 0, State(game, round));
+    if (!inst.states[round] && round > 0) {
+      inst.states.splice(round, 0, State(game, round));
     }
     else {
       console.log("Error: Raven.js:newState error");
@@ -13,7 +16,7 @@ function Raven(game) {
   }
 
   function findState(round) {
-    return states[round];
+    return inst.states[round];
   }
 
   function updateState(round) {

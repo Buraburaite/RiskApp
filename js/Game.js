@@ -33,8 +33,8 @@ function Game() {
 
   function newRound() {
     round++;
-    raven.newState(round);
-    this.god.trigger('worldUpdate', round);
+    inst.raven.newState(round);
+    inst.god.trigger('worldUpdate', round);
   }
 
   function placeArmies(player, dest, num = 1) {
