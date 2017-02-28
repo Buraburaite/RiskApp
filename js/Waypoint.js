@@ -5,20 +5,20 @@ function Waypoint(game, positionArr, waypointName = '...', waypointType = "landm
     position       : positionArr, //positions are a whole number percentage, i.e. [50, 50] is the center
 
     get armyCount() { return armyCount; },
-    set armyCount(newCount) { armyCount = newCount; update(); },
+    set armyCount(newCount) { armyCount = newCount; updateSyling(); },
 
     get banner() { return getBanner(); },
 
     get id() { return id; },
 
     get name()        { return name; },
-    set name(newName) { name = newName;  update();},
+    set name(newName) { name = newName;  updateSyling();},
 
     get residingPlayer() { return residingPlayer; },
-    set residingPlayer(newPlayer) { residingPlayer = newPlayer; update(); },
+    set residingPlayer(newPlayer) { residingPlayer = newPlayer; updateSyling(); },
 
     get type()        { return type; },
-    set type(newType) { type = newType;  update();},
+    set type(newType) { type = newType;  updateSyling();},
 
     get x()  { return waypointEl.css('left');   },
     get y()  { return waypointEl.css('bottom'); }
@@ -42,27 +42,26 @@ function Waypoint(game, positionArr, waypointName = '...', waypointType = "landm
   //Constructing for the inst
   //Create waypoint element, appending to map
   let waypointEl = $('<span/>')
-  .addClass('waypoint neutal')
   .attr('id', name)
-  .html(0)
   .css('left',   inst.position[0] + '%')
   .css('bottom', inst.position[1] + '%');
   mapEl.append(waypointEl);
 
   //Create tooltip, appending to map
   let tooltip = $('<span/>')
-  .addClass('myTooltip neutal')
   .attr('id', name + '-myTooltip')
-  .html('<em>' + name + '</em><br>' + 'Neutral')
   .css('left',   position[0] - 5 + '%')
   .css('bottom', position[1] + 8 + '%');
   mapEl.append(tooltip);
 
-  function update() {
+  // update the styles to match the instance's variables
+  updateSyling();
+
+  function updateSyling() {
     let banner = residingPlayer ? residingPlayer.house : "Neutral";
 
     waypointEl
-    .html(armyCount)
+    .html(armyCount ? armyCount.toString() : '')
     .removeClass()
     .addClass('waypoint ' + banner.toLowerCase());
 
@@ -81,7 +80,7 @@ function Waypoint(game, positionArr, waypointName = '...', waypointType = "landm
     residingPlayer = state.residingPlayer;
     type           = state.type;
 
-    update();
+    updateSyling();
   }
 
   god.on('worldUpdate', (e, round) => { onWorldUpdate(e, round); });

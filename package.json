@@ -15,6 +15,7 @@
   "homepage": "github.com/Buraburaite/RiskApp#readme",
   "devDependencies": {},
   "dependencies": {
-    "simplehttpserver": "0.0.6"
+    "simplehttpserver": "0.0.6",
+    "underscore": "^1.8.3"
   }
 }
