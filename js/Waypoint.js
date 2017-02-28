@@ -30,7 +30,7 @@ function Waypoint(game, positionArr, waypointName = '...', waypointType = "landm
   const id = inst.position.toString();
   const position = positionArr;
 
-  let armyCount = 0;
+  let armyCount = 1;
   let name = waypointName;
   let residingPlayer = null;
   let type = waypointType;
@@ -61,7 +61,7 @@ function Waypoint(game, positionArr, waypointName = '...', waypointType = "landm
     let banner = residingPlayer ? residingPlayer.house : "Neutral";
 
     waypointEl
-    .html(armyCount ? armyCount.toString() : '')
+    .html(residingPlayer ? armyCount.toString() : '')
     .removeClass()
     .addClass('waypoint ' + banner.toLowerCase());
 

@@ -31,14 +31,15 @@ function Game() {
     //Create our waypoints
     inst.waypoints = createWaypoints(inst);
 
-    //Start Turn 1
-    newRound();
 
     inst.players.push(Player('Javi', 'Targaryen'));
     inst.players.push(Player('Durkee', 'Baratheon'));
 
-    placeArmies('Javi', 'Lys', 10);
-    placeArmies('Durkee', 'Myr', 10);
+    placeArmiesRound0('Javi', 'Lys', 10); //special version of placeArmies for Round 0
+    placeArmiesRound0('Durkee', 'Myr', 10);
+
+    //Start Turn 1
+    newRound();
   }
 
   function newRound() {
@@ -47,24 +48,35 @@ function Game() {
     inst.god.trigger('worldUpdate', round);
   }
 
+  function placeArmiesRound0(player, dest, num = 1) {
+    //Type checking and conversion
+    if (typeof player === 'string') { player = toPlayer(player); }
+    if (typeof dest   === 'string') { dest   = toWaypoint(dest); }
+
+    dest.residingPlayer = player;
+    dest.armyCount = num;
+  }
+
   function placeArmies(player, dest, num = 1) {
     //Type checking and conversion
     if (typeof player === 'string') { player = toPlayer(player); }
     if (typeof dest   === 'string') { dest   = toWaypoint(dest); }
 
-    //Place armies (currently can place anywhere)
-    dest.residingPlayer = player;
-    dest.armyCount += num;
-
-  }
+    //Place armies
+      if (dest.residingPlayer === player) { dest.armyCount += num; }
+      else { return console.log("Error: Game.placeArmies"); }
+    }
 
   function marchArmies(origin, dest, marchingNum) {
     //Type checking and conversion, assuming either string name or Waypoint
     if (typeof origin === 'string') { origin = toWaypoint(origin); }
     if (typeof dest   === 'string') { dest   = toWaypoint(dest); }
 
-    //If number of armies to send is not specified, then send all but one
-    marchingNum = marchingNum || origin.armyCount - 1;
+    // If origin does no belong to a player, throw an "error"
+    if (origin.residingPlayer === null) { return console.log("Error: Game.marchArmies"); }
+
+    // If a valid number of armies then send that many, otherwise send all but one
+    marchingNum = (marchingNum) ? marchingNum : origin.armyCount - 1;
 
     // Remove the number of marching armies from the origin
     origin.armyCount -= marchingNum;
@@ -101,7 +113,7 @@ function Game() {
         defendDice = new Array(defendingNum).fill(0).map(calcDiceRoll).sort().reverse();
 
         // ...remove the casualties from the respective total...
-        for (let i = 0; i < defendDice.length; i++) {
+        for (let i = 0; i < Math.min(attackDice.length, defendDice.length); i++) {
           if (attackDice[i] > defendDice[i]) { totalDefenders--; }
           else                               { totalAttackers--; }
         }
