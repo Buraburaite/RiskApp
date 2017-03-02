@@ -22,17 +22,22 @@ let roundBtn = $('#round-btn').click((e) => {
 game.god.on('worldUpdate', (e, round) => {
   incrementBtn.html('Current Turn: ' + round);
 });
-$(document).ready(() => {
-  game.startGame();
 
-  $('#mySVGLine').svg({ onload: drawLine });
-
-});
 
 function drawLine(svg) {
-    svg.circle(75, 75, 50,
-        {fill: 'red', stroke: 'red', strokeWidth: 3});
+    svg.circle(75, 75, 50, {
+      fill: 'none',
+      stroke: 'red',
+      strokeWidth: 3
+    });
     var g = svg.group({stroke: 'black', strokeWidth: 2});
     svg.line(g, 15, 75, 135, 75);
     svg.line(g, 75, 15, 75, 135);
 }
+
+$(document).ready(() => {
+  game.startGame();
+
+  $('#mySVGLine').svg({ onLoad: drawLine });
+
+});
