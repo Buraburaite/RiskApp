@@ -1,8 +1,11 @@
-function Waypoint(game, positionArr, waypointName = '...', waypointType = "landmark") {
+function Waypoint(game, positionArr, waypointName = '...', waypointType = "landmark", neighborArr = []) {
 
   //Public
   const inst =  {
-    position       : positionArr, //positions are a whole number percentage, i.e. [50, 50] is the center
+    get position() { return positionArr; }, // positions are a whole number percentage, i.e. [50, 50] is the center
+
+    get neighbors() { return neighbors; },
+    set neighbors(newNeighbors) { neighbors = newNeighbors; },
 
     get armyCount() { return armyCount; },
     set armyCount(newCount) { armyCount = newCount; updateSyling(); },
@@ -29,6 +32,7 @@ function Waypoint(game, positionArr, waypointName = '...', waypointType = "landm
   const { god, mapEl, raven, players } = game;
   const id = inst.position.toString();
   const position = positionArr;
+  let neighbors = neighborArr;
 
   let armyCount = 1;
   let name = waypointName;

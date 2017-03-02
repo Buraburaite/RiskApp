@@ -81,9 +81,10 @@ function Game() {
     // Remove the number of marching armies from the origin
     origin.armyCount -= marchingNum;
 
-    // If attacker left no armies in origin, they abandon origin
+    // If attacker left not armies in origin, they abandon origin
     if (!origin.armyCount) {
       origin.residingPlayer = null;
+      origin.armyCount = 1;
     }
 
     //Check if moving would cause a problem
