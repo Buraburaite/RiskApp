@@ -1,3 +1,0 @@
-[submodule "EventEmitter"]
-	path = js/EventEmitter
-	url = git://github.com/Olical/EventEmitter.git

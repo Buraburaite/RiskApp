@@ -1,12 +1,19 @@
+/*====
+This function creates and returns a hard-coded list of Waypoints. Later on,
+this will read from a csv. It is worth noting that Waypoints add themselves to
+the map when they are constructed, so this file does not do that it.
+====*/
 function createWaypoints(game) {
 
   const waypoints = [];
 
-  function createWaypoint(xPercentage, yPercentage, name, type, neighbors) {
-    waypoints.push(Waypoint(game, [xPercentage, yPercentage], name, type, neighbors));
-  }
-
-  //Waypoint connections
+  /*====
+  Waypoint connections (as strings) - Each connection should only be listed
+  once. This means that if Winterfell connects to Braavos, only one of them
+  should include the other as a connection here. The connection from the opposite
+  direction will be added later. Also, these are strings at first because all
+  waypoint objects must already exist before you can establish connections.
+  ====*/
   const connections = {
     'Winterfell'     : ['Braavos', 'King\'s Landing', 'Lannisport'],
     'Lannisport'     : ['Sunspear', 'King\'s Landing'],
@@ -25,6 +32,15 @@ function createWaypoints(game) {
     'Qarth'          : ['Valyria'],
     'Valyria'        : []
   };
+
+  /*====
+  Waypoints take the game object, an array of containing their position, what to
+  name the waypoint (default is '...'), it's type (default is 'Fortification'),
+  and it's neighbors (for now these are the connection strings).
+  ====*/
+  function createWaypoint(xPercentage, yPercentage, name, type, neighbors) {
+    waypoints.push(Waypoint(game, [xPercentage, yPercentage], name, type, neighbors));
+  }
 
   //Hard-coded waypoints
   createWaypoint(12, 44, 'Lannisport', 'Fortification', connections.Lannisport);
@@ -45,15 +61,20 @@ function createWaypoints(game) {
   createWaypoint(88, 10, 'Qarth', 'Fortification', connections.Qarth);
 
 
-  // Turn connections from strings into the appropriate Waypoint objects
+  //==Turn waypoint.neighbors strings into the corresponding Waypoint objects ==
+
+  // Function for turning a string into its Waypoint object
   const toWaypoint = (stringName) => waypoints.find((wp) => stringName  === wp.name);
+
+  // Function for changing a waypoints neighbors array into an array of objects
   function neighborStringsToWaypoints(waypoint) {
     waypoint.neighbors = waypoint.neighbors.map((wp) => toWaypoint(wp));
   }
 
+  // Change each waypoint's neighbors into objects
   waypoints.forEach((wp) => neighborStringsToWaypoints(wp));
 
-  // A knows about B, but we gotta let B know about A
+  // Current, A knows about B. Here we finally let B know about A.
   waypoints.forEach((A) => {
     A.neighbors.forEach((B) => {
       if (!B.neighbors.includes(A)){
@@ -61,6 +82,7 @@ function createWaypoints(game) {
       }
     });
   });
+  //==Connection set-up complete======
 
   return waypoints;
 }

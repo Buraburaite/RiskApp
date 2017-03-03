@@ -1,6 +1,7 @@
-//Create Game object
+//Creates Game object
 let game = Game();
 
+// Sounds through ion sound (currently not enabled)
 function loadSounds () {
   ion.sound({
     sounds: [{name: "ambience", loop: true}],
@@ -11,7 +12,7 @@ function loadSounds () {
   });
 }
 
-//Elements for testing
+// Besides the game.startGame command, all of this code is for development only
 let incrementBtn = $('#round-increment-btn').click((e) => {
   game.newRound();
 });

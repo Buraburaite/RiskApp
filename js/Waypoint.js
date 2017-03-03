@@ -1,34 +1,54 @@
 function Waypoint(game, positionArr, waypointName = '...', waypointType = "landmark", neighborArr = []) {
 
-  //Public
+  //Public variables
   const inst =  {
-    get position() { return positionArr; }, // positions are a whole number percentage, i.e. [50, 50] is the center
+    /*====
+    positions are a whole number percentage, i.e. [50, 50] is the center of the map
+    ====*/
+    get position() { return positionArr; },
 
+    //Adjacent waypoints (i.e. where you can go to from this waypoint?)
+    //Setting neighbors is a consequence of how createWaypoints.js works. It
+    //will be removed eventually, as it is not meant to be mutable.
     get neighbors() { return neighbors; },
     set neighbors(newNeighbors) { neighbors = newNeighbors; },
 
+    /*====
+    Banner is not a variable so much as the result of a function that returns
+    the house of the residingPlayer, and if there is none, then it will return
+    'Neutral' instead.
+    ====*/
+    get banner() { return getBanner(); },
+
+    // id of the waypoint
+    get id() { return id; },
+
+    // the x and y position of the waypoint's mapEl (not any of the tooltips)
+    // It's a percentage, i.e. 'left: 60%' in the css returns 60% here.
+    get x()  { return waypointEl.css('left');   },
+    get y()  { return waypointEl.css('bottom'); },
+
+    //==Mutables (i.e. part of the state that the Raven object records)========/
+
+    //The number of armies stationed at the waypoint
     get armyCount() { return armyCount; },
     set armyCount(newCount) { armyCount = newCount; updateSyling(); },
 
-    get banner() { return getBanner(); },
-
-    get id() { return id; },
-
+    // the name of the waypoint (this is considered mutable)
     get name()        { return name; },
     set name(newName) { name = newName;  updateSyling();},
 
+    // the player who controls the waypoint (null if none)
     get residingPlayer() { return residingPlayer; },
     set residingPlayer(newPlayer) { residingPlayer = newPlayer; updateSyling(); },
 
     get type()        { return type; },
     set type(newType) { type = newType;  updateSyling();},
 
-    get x()  { return waypointEl.css('left');   },
-    get y()  { return waypointEl.css('bottom'); }
-
+    //==Mutables=======================================================MUTABLES/
   };
 
-  //Private
+  //Private variables
   const { god, mapEl, raven, players } = game;
   const id = inst.position.toString();
   const position = positionArr;
@@ -39,11 +59,6 @@ function Waypoint(game, positionArr, waypointName = '...', waypointType = "landm
   let residingPlayer = null;
   let type = waypointType;
 
-  let getBanner = () => {
-    return inst.residingPlayer ? inst.residingPlayer.house : 'Neutral';
-  };
-
-  //Constructing for the inst
   //Create waypoint element, appending to map
   let waypointEl = $('<span/>')
   .attr('id', name)
@@ -61,6 +76,12 @@ function Waypoint(game, positionArr, waypointName = '...', waypointType = "landm
   // update the styles to match the instance's variables
   updateSyling();
 
+  // Returns the house of the residingPlayer, unless null, then returns 'Neutral'
+  function getBanner() {
+    return inst.residingPlayer ? inst.residingPlayer.house : 'Neutral';
+  }
+
+  // Updates the styles of the waypoint and tooltip elements to match inst's variables
   function updateSyling() {
     let banner = residingPlayer ? residingPlayer.house : "Neutral";
 
@@ -75,7 +96,7 @@ function Waypoint(game, positionArr, waypointName = '...', waypointType = "landm
     .addClass('myTooltip ' + banner.toLowerCase());
   }
 
-  //Event stuff
+  //Event handling
   function onWorldUpdate(e, round) {
     let state = raven.rounds[round].startState[inst.id];
 
@@ -87,10 +108,8 @@ function Waypoint(game, positionArr, waypointName = '...', waypointType = "landm
     updateSyling();
   }
 
+  //Event wiring
   god.on('worldUpdate', (e, round) => { onWorldUpdate(e, round); });
-
-
-
 
   return inst;
 }

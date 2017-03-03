@@ -1,9 +1,13 @@
 function Game() {
 
-  //Private
-  let round = 0; //Increment with newRound(), never change directly.
+  //Private variables
+  /*====
+  Unless you're manipulating certain development features in app.js, round
+  should always be changed by calling newRound(), never directly.
+  ====*/
+  let round = 0;
 
-  //Public
+  //Public variables
   const inst = {
     god : $({}),
     mapEl : $('.map-container'),
@@ -16,9 +20,9 @@ function Game() {
     waypoints : null,
 
     get round() { return round; },
-    set round(newRound) { round = newRound; this.god.trigger('worldUpdate', round); } //for testing purposes only
+    set round(newRound) { round = newRound; this.god.trigger('worldUpdate', round); } //for dev purposes only
   };
-  // Conversion methods for strings to waypoints or player
+  // Private conversion functions for strings to waypoints or player
   const toPlayer   = (stringName) => inst.players  .find((p)  => stringName  === p.name);
   const toWaypoint = (stringName) => inst.waypoints.find((wp) => stringName  === wp.name);
 
@@ -28,26 +32,35 @@ function Game() {
     //Set up the raven (our model)
     inst.raven = Raven(inst);
 
-    //Create our waypoints
+    //Create our waypoints (currently relies on Raven already existing)
     inst.waypoints = createWaypoints(inst);
 
-
+    //Create some default players
     inst.players.push(Player('Javi', 'Targaryen'));
     inst.players.push(Player('Durkee', 'Baratheon'));
 
+    //Give them some armies
     placeArmiesRound0('Javi', 'Lys', 10); //special version of placeArmies for Round 0
     placeArmiesRound0('Durkee', 'Myr', 10);
 
-    //Start Turn 1
+    //Start Round 1
     newRound();
   }
 
+  //Progress to the next round
   function newRound() {
+    //increase round
     round++;
+    //Have raven save the state of the game
     inst.raven.newRound(round);
+    /*====
+    Trigger worldUpdate event, currently this syncs the waypoints with the raven
+    and then they update their styles to match
+    ====*/
     inst.god.trigger('worldUpdate', round);
   }
 
+  //Add armies at the beginning of the game (when you can add wherever you want)
   function placeArmiesRound0(player, dest, num = 1) {
     //Type checking and conversion
     if (typeof player === 'string') { player = toPlayer(player); }
@@ -57,6 +70,7 @@ function Game() {
     dest.armyCount = num;
   }
 
+  //Place armies after Round 0
   function placeArmies(player, dest, num = 1) {
     //Type checking and conversion
     if (typeof player === 'string') { player = toPlayer(player); }
@@ -67,6 +81,7 @@ function Game() {
       else { return console.log("Error: Game.placeArmies"); }
     }
 
+  //Move armies, and if that requires a battle, then battle
   function marchArmies(origin, dest, marchingNum) {
     //Type checking and conversion, assuming either string name or Waypoint
     if (typeof origin === 'string') { origin = toWaypoint(origin); }

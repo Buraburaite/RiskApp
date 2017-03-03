@@ -1,3 +1,4 @@
+
 function Player(playerName, playerHouse) {
 
   //Public
@@ -16,6 +17,7 @@ function Player(playerName, playerHouse) {
 }
 
 //Statics
+//newId creates an id and keeps track of the current count
 Player.newId = (() => {
   let count = 0;
 
