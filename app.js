@@ -26,14 +26,8 @@ game.god.on('worldUpdate', (e, round) => {
 
 
 function drawLine(svg) {
-    svg.circle(75, 75, 50, {
-      fill: 'none',
-      stroke: 'red',
-      strokeWidth: 3
-    });
-    var g = svg.group({stroke: 'black', strokeWidth: 2});
-    svg.line(g, 15, 75, 135, 75);
-    svg.line(g, 75, 15, 75, 135);
+  let wayLines = svg.group({stroke: 'green'});
+  svg.line(wayLines, 450, 120, 550, 20, {strokeWidth: 50});
 }
 
 $(document).ready(() => {
